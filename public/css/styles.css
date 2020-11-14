@@ -1,3 +1,317 @@
+body{
+	/* Background pattern from Toptal Subtle Patterns */
+	background-image: url("img/dark-honeycomb.png");
+	margin: 0px;
+	padding: 0px;
+	font-size: 18px;
+	font-family: 'Josefin Sans', sans-serif;
+	color: #efefef;	
+}
+
+.page-container {
+	position: relative;
+	min-height: 100vh;
+}
+
+.content-wrap{
+	padding-bottom: 40px;
+}
+
+.topbar{
+	background-color: #595959;
+	letter-spacing: 1px;
+}
+
+.topbar a{
+	color: #efefef;
+}
+
+.topbar img{
+	height: 40px;
+	width: 40px;
+}
+
+.topbar span{
+	color: #46c768;
+	font-weight: 700;
+}
+
+.footer{
+	position: absolute;
+    bottom: 0;
+    background-color: #353535;
+	width: 100%;
+	height: 40px;
+    line-height: 40px;
+	text-align: center;
+}
+
+.content{
+	text-align: center;
+	color: #121212;	
+	background-color: #dedede;
+	border-radius: 5px;
+	-webkit-box-shadow: 1px 1px 15px 1px rgba(159,185,194,0.9);
+	-moz-box-shadow: 1px 1px 15px 1px rgba(159,185,194,0.9);
+	box-shadow: 1px 1px 15px 1px rgba(159,185,194,0.9);		
+}
+
+p{
+	text-align: justify;
+	line-height: 110%;
+}
+
+h1{
+	font-size: 30px;
+	margin: 0;
+}
+
+.input-container {
+    display: flex;
+	min-width: 95%;
+	margin-bottom: 15px;
+}
+
+.icon {
+	padding: 10px;
+	background: #46c768;
+	color: white;
+	min-width: 5%;
+	text-align: center;
+}
+
+.input-field {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid lightgrey;
+	outline: none;
+}
+
+.input-field:focus {
+	border: 2px solid #46c768;
+	-webkit-box-shadow: 0px 0px 10px 2px rgba(159,185,194,0.9);
+	-moz-box-shadow: 0px 0px 10px 2px rgba(159,185,194,0.9);
+	box-shadow: 0px 0px 10px 2px rgba(159,185,194,0.9);	
+}
+
+input[type=submit]:hover
+{
+	background-color: #35b657;
+	-webkit-box-shadow: 0px 0px 15px 5px rgba(159,185,194,0.9);
+	-moz-box-shadow: 0px 0px 15px 5px rgba(159,185,194,0.9);
+	box-shadow: 0px 0px 15px 5px rgba(159,185,194,0.9);	
+}
+
+.logo
+{
+	font-size: 48px;
+	width: 380px;
+	margin-left: auto;
+	margin-right: auto;
+	letter-spacing: 4px;
+	padding: 30px 0px;
+}
+
+.logo img
+{
+	float: left;
+	width: 100px;
+	height: 100px;
+	margin-right: 10px;
+}
+
+.logo span{
+	color: #46c768;
+	font-weight: 700;
+}
+
+.logo p{
+	margin: 0;
+
+}
+
+.logo p:nth-of-type(2){
+	font-size: 15px;
+}
+
+nav{
+    min-height: 59px;
+}
+
+.custom-toggler.navbar-toggler{ 
+    border-color: black; 
+}
+
+.custom-toggler .navbar-toggler-icon { 
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E"); 
+}
+
+nav button{
+    background-color: lawngreen;
+}
+
+nav button:hover{
+    background-color: green;
+}
+
+nav a{
+    color: #232223;
+}
+
+ul > li:hover > a
+{
+	color: #000;
+}
+
+ul > li:hover
+{
+	background-color: #46c768;
+    border-radius: 5px;
+}
+
+.menu-icon{
+	margin-right: 5px;
+}
+
+.content-header{
+	font-size: 30px;
+    font-weight: 700;
+	padding-top: 25px;
+	padding-bottom: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+
+form{
+	text-align: left;
+    font-size: 16px;
+}
+
+input[type=radio]
+{
+	width: 20px;
+	
+}
+
+.column
+{
+	float: left;
+	width: 33%;
+}
+
+.balance-date-picker
+{
+    padding: 15px 10px 0 0;
+}
+
+#balance-date
+{
+	height: 25px;
+	font-size: 15px;
+	margin-left: 10px;
+}
+
+table
+{
+	border-collapse: collapse;
+	font-size: 16px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    color: black;
+}
+
+table, td, th
+{
+	border: 1px solid black;
+}
+
+.incomes-header{
+	font-size: 17px;
+	background-color: #4CAF50;
+	color: black;
+	text-align: center;
+}
+
+.expenses-header{
+	font-size: 17px;
+	background-color: #ff3223;
+	color: black;
+	text-align: center;
+}
+
+th, td
+{
+	padding: 3px 5px;
+}
+
+tr:hover
+{
+	background-color: #efefef;
+}
+
+tr td:nth-child(1)
+{
+	width: 60%;
+}
+
+tr th:nth-child(1)
+{
+	width: 60%;
+}
+
+.sum-row
+{
+	background-color: #b3b3b3;
+}
+
+.balance-row{
+	font-size: 20px;
+	font-weight: 700;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.formLegend{
+    font-size: 21px;
+    color: darkgreen;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 0;
+}
+
+hr{
+    border: 1px solid lightgrey;
+    margin-bottom: 0;
+}
+
+.btn-block {
+    font-size: 22px;
+    padding: 10px 0; 
+    /* define values in pixels / Percentage or em. whatever suits 
+       your requirements */
+}
+
+.tables{
+    margin: 10px 0;
+}
+
+.error{
+	color: red;
+	margin-top: 0px;
+	margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+img{
+    max-width: 100%;
+    height: auto;
+}
+
+/* CSS from MVC framework template */
+
 .alert {
     border: 1px solid #ccc;
     padding: 6px;
