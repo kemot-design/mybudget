@@ -4,6 +4,7 @@
 
 {% block body %}
 
+<!--
     <h1>Log in</h1>
 
     <form action="/login/create" method="post">
@@ -26,5 +27,48 @@
         <a href="/password/forgot">Forgot password?</a>
 
     </form>
+
+-->
+
+    <main>
+
+        <article>
+
+            <div class="container">
+
+                <div class="row">
+
+                    <div class="col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-xl-4 offset-xl-4 my-4 content">
+
+                        <header>
+                            <h1 class="content-header">LOGOWANIE</h1>
+                        </header>
+
+                        <form action="/login/create" method="POST">
+
+                            <div class="input-container">
+                                <i class="icon-user-1 icon"></i>
+                                <input class="input-field" type="email" name="email" placeholder="email" onfocus="this.placeholder=''" onblur="this.placeholder='email'" value="{{ email }}">
+                            </div>		
+
+                            <div class="input-container">
+                                <i class="icon-lock-1 icon"></i>
+                                <input class="input-field" type="password" name="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='password'">
+                            </div>
+
+                            <input type="submit" class="btn btn-success btn-block my-4" name="login" value="Zaloguj">
+
+                        </form>
+
+                    </div>    
+
+                </div>    
+
+            </div>
+
+        </article>
+
+    </main>
+
 
 {% endblock %}
