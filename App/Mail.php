@@ -29,7 +29,7 @@ class Mail
         $domain = Config::MAILGUN_DOMAIN;
 
         $mg->messages()->send($domain, [
-            'from'    => 'kemot@test.com',
+            'from'    => 'kemot@mybudget.com',
             'to'      => $to,
             'subject' => $subject,
             'text'    => $text,

@@ -22,7 +22,8 @@ class Account extends \Core\Controller
     public function validateEmailAction()
     {
         $is_valid = ! User::emailExists($_GET['email'], $_GET['ignore_id'] ?? null);
-        
+
+        //The serverside response must be a JSON string that must be "true" for valid elements, and can be "false", undefined, or null for invalid elements. That is why we change content-type to json, and encode $is_valid to json
         header('Content-Type: application/json');
         echo json_encode($is_valid);
     }

@@ -4,12 +4,100 @@
 
 {% block body %}
 
-    <h1>Welcome</h1>
-
     {% if current_user %}
-        Hello {{ current_user.name }}.
+
+        <main>
+
+            <div class="container">
+
+                <div class="col-xl-8 offset-xl-2 my-3 content">
+
+                    <article>
+
+                        <header>
+                            <h2 class="content-header">Witaj {{ current_user.name }} </h2>
+                        </header>
+
+                        <div class="row p-3">
+
+                            <div class="col-md-6 my-3">
+                                 <img src="img/savings.jpg" alt="savings">
+                            </div>
+                            <div class="col-md-6 my-3">
+                                <p>Monitoruj przychody i wydatki, zrób plan dla swoich pieniędzy, inwestuj nadwyżki, a póżniej zbieraj plony swoich mądrych decyzji finansowych.</p>
+                                <p>Ciesze się, że jesteś z nami i zapraszam do korzystania z naszej aplikacji.</p>
+                            </div>
+
+                        </div>    
+
+                    </article>
+
+                </div>    
+
+            </div>
+
+        </main>
+        
     {% else %}
-        <a href="/signup/new">Sign up</a> or <a href="/login">log in</a>.
+
+        <main>
+
+            <div class="container">
+
+                <div class="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 my-4 pb-2 content">
+
+                    <section>
+
+                        <header>
+                            <h2 class="content-header"> Dlaczego warto prowadzić budżet? </h2>
+                        </header>					
+
+                        <blockquote class="blockquote text-left">
+                            <p class="mb-0">Zrobić budżet to wskazać swoim pieniądzom, dokąd mają iść, zamiast zastanawiać się, gdzie się rozeszły</p>
+                            <footer class="blockquote-footer">John C. Maxwell</footer>
+                        </blockquote> 
+
+                        <!--<div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <img src="img/money_plant.jpg" alt="money plant" />
+                                 Photo by Micheile Henderson on Unsplash
+                            </div>
+                        </div> -->
+
+                        <p>
+                            Zachęcam Cię do dołączenia do grona naszych użytkowników i sprawdzenia jak kontrola finansów osobistych może odmienić <strong> Twoje </strong>życie!
+
+                        </p>					
+                    </section>
+
+                </div>
+
+                <div class="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 my-4 content">
+
+                    <section>
+
+                        <div class="row pb-3">
+
+                            <div class="col-md-6">
+                                <p class="text-center mb-1 mt-3">Pierwszy raz tutaj?</p>
+                               <a href="/signup/new" class="btn btn-success btn-block">Zarejestruj się</a>
+                            </div>
+
+                            <div class="col-md-6">
+                                <p class="text-center mb-1 mt-3">Masz już konto?</p>
+                               <a href="/login" class="btn btn-primary btn-block">Logowanie</a>
+                            </div>
+
+                        </div>
+
+                    </section>	
+
+                </div>
+
+           </div>
+
+        </main>  
+
     {% endif %}
 
 {% endblock %}
