@@ -392,8 +392,8 @@ class User extends \Core\Model
 
         $sql = 'UPDATE users
                 SET is_active = 1,
-                    activation_hash = null
-                WHERE activation_hash = :hashed_token';
+                    activate_hash = null
+                WHERE activate_hash = :hashed_token';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
