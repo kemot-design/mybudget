@@ -54,7 +54,7 @@ class User extends \Core\Model
             $this->activation_token = $token->getValue();
 
             $sql = 'INSERT INTO users (name, email, password_hash, activate_hash)
-                    VALUES (:name, :email, :password_hash, :activation_hash)';
+                    VALUES (:name, :email, :password_hash, :activate_hash)';
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
