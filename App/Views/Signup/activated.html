@@ -4,8 +4,45 @@
 
 {% block body %}
 
-    <h1>Sign up</h1>
+    <main>
 
-    <p>Success! Your account is now active. You can now <a href="/login">log in</a>.</p>
+        <div class="container">
+
+            <div class="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 my-4 pb-2 content">
+
+                <section>
+
+                    <header>
+                        <h2 class="content-header"> Aktywacja zakończona pomyślnie! </h2>
+                    </header>					 
+
+                    <p style="text-align: center">	
+                        Teraz możesz zalogowac się do swojego konta
+                    </p>
+
+                </section>
+
+            </div>
+
+            <div class="col-lg-10 offset-lg-1 col-xl-8 offset-xl-2 my-4 content">
+
+                <section>
+
+                    <div class="row pb-3">
+
+                        <div class="col-md-6 offset-md-3">
+                            <p class="text-center mb-1 mt-3">Zaloguj się na swoje konto</p>
+                           <a href="/login" class="btn btn-primary btn-block">Logowanie</a>
+                        </div>
+
+                    </div>
+
+                </section>	
+
+            </div>
+
+       </div>
+
+    </main> 
 
 {% endblock %}
