@@ -53,7 +53,7 @@ class User extends \Core\Model
             $hashed_token = $token->getHash();
             $this->activation_token = $token->getValue();
 
-            $sql = 'INSERT INTO users (name, email, password_hash, activation_hash)
+            $sql = 'INSERT INTO users (name, email, password_hash, activate_hash)
                     VALUES (:name, :email, :password_hash, :activation_hash)';
 
             $db = static::getDB();
@@ -62,7 +62,7 @@ class User extends \Core\Model
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
-            $stmt->bindValue(':activation_hash', $hashed_token, PDO::PARAM_STR);
+            $stmt->bindValue(':activate_hash', $hashed_token, PDO::PARAM_STR);
 
             return $stmt->execute();
         }
@@ -103,6 +103,10 @@ class User extends \Core\Model
 
             if (preg_match('/.*\d+.*/i', $this->password) == 0) {
                 $this->errors[] = 'Password needs at least one number';
+            }
+            
+            if($this->password != $this->password_again){
+                $this->errors[] = 'Passwords must be the same';
             }
 
         }
