@@ -105,10 +105,11 @@ class User extends \Core\Model
                 $this->errors[] = 'Password needs at least one number';
             }
             
-            if($this->password != $this->password_again){
+            if(isset($this->password_again)){
+                if($this->password != $this->password_again){
                 $this->errors[] = 'Passwords must be the same';
+                }    
             }
-
         }
     }
 
