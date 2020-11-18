@@ -30,9 +30,9 @@ class Items extends Authenticated
      *
      * @return void
      */
-    public function indexAction()
+    public function addIncomeAction()
     {
-        View::renderTemplate('Items/index.html');
+        View::renderTemplate('Items/add_income.html');
     }
 
     /**

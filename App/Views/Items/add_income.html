@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Income{% endblock %}
+
+{% block body %}
+
+    <main>
+
+    <div class="container">
+
+        <div class="col-sm-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 my-3 content">
+            <article>
+
+                <header>
+
+                    <h2 class="content-header"><i class="icon-money-1"></i> Dodaj przychód </h2>
+
+                </header>
+
+                <form action="add_new_income.php" method="POST">
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-1">
+
+                            <label class="formLegend" for="income_value"> Kwota </label>
+                            <input class="form-control" type="number" name="income_value" id="income_value" step="0.01">
+
+                        </div>
+                    </div>	
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-1">
+
+                            <label for="income_date" class="formLegend"> Data </label>
+                            <input class="form-control" type="date" name="income_date">
+
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mt-1 ">
+                        <div class="col-sm-10 offset-sm-1">
+
+                            <label for="income_category" class="formLegend">Kategoria</label><br/>
+                            <select class="custom-select mr-sm-2" name="income_category">
+                                <option value="0" selected>Wybierz kategorię...</option>
+
+                                <?PHP
+                                    foreach($income_categories as $income_category){
+                                        echo '<option value ="'.$income_category['id'].'">'.$income_category['name'].'</option>';    
+                                    } 
+                                ?>
+
+                            </select>   
+                        </div>    
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-1">
+
+                            <label for="comment" class="formLegend"> Komentarz (opcjonalnie) </label><br>
+                            <textarea class="form-control" id="comment" name="income_comment" rows="4" cols="44" placeholder="Twój komentarz ..."></textarea>
+
+                        </div>
+                    </div>	
+
+                    <div class="row py-3">
+
+                        <div class="col-md-6 my-1">
+                           <input type="submit" class="btn btn-success btn-block" value="Dodaj">
+                        </div>
+                        <div class="col-md-6 my-1">
+                           <a href="mainmenu.html" class="btn btn-danger btn-block">Anuluj</a>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </article>
+
+        </div>    
+
+    </div>
+
+    </main>
+
+{% endblock %}
