@@ -47,12 +47,10 @@
                             <label for="income_category" class="formLegend">Kategoria</label><br/>
                             <select class="custom-select mr-sm-2" name="income_category">
                                 <option value="0" selected>Wybierz kategorię...</option>
-
-                                <?PHP
-                                    foreach($income_categories as $income_category){
-                                        echo '<option value ="'.$income_category['id'].'">'.$income_category['name'].'</option>';    
-                                    } 
-                                ?>
+                            
+                                {% for category in incomeCategories %}
+                                    <option value="category.id">{{ category.name }}</option>
+                                {% endfor %}
 
                             </select>   
                         </div>    

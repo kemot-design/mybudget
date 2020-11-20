@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Auth;
+use \App\Models\Incomes;
 
 /**
  * Items controller (example)
@@ -33,7 +34,13 @@ class Income extends Authenticated
      */
     public function newAction()
     {
-        View::renderTemplate('Income/new.html');
+        $userId = $this->user->id;
+        
+        $incomeCategories = Incomes::getUserAssignedCategories($userId);
+        
+        View::renderTemplate('Income/new.html',[
+            'incomeCategories' => $incomeCategories
+        ]);
     }
 
 
