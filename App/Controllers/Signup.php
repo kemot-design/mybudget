@@ -33,8 +33,10 @@ class Signup extends \Core\Controller
         $user = new User($_POST);
 
         if ($user->save()) {
+            
+            User::setDefaultCategoriesToUser($user->email);
 
-            $user->sendActivationEmail();
+            //$user->sendActivationEmail();
 
             $this->redirect('/signup/success');
 

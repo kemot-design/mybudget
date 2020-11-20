@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Auth;
 
 /**
  * Items controller (example)
@@ -10,7 +11,7 @@ use \Core\View;
  * PHP version 7.0
  */
 //class Items extends \Core\Controller
-class Items extends Authenticated
+class Income extends Authenticated
 {
 
     /**
@@ -18,40 +19,22 @@ class Items extends Authenticated
      *
      * @return void
      */
-    /*
     protected function before()
     {
-        $this->requireLogin();
-    }
-    */
+        parent::before();
 
-    /**
-     * Items index
-     *
-     * @return void
-     */
-    public function addIncomeAction()
-    {
-        View::renderTemplate('Items/add_income.html');
+        $this->user = Auth::getUser();
     }
 
     /**
-     * Add a new item
+     * Show add new income form
      *
      * @return void
      */
     public function newAction()
     {
-        echo "new action";
+        View::renderTemplate('Income/new.html');
     }
 
-    /**
-     * Show an item
-     *
-     * @return void
-     */
-    public function showAction()
-    {
-        echo "show action";
-    }
+
 }

@@ -457,4 +457,34 @@ class User extends \Core\Model
 
         return false;
     }
+    
+    /**
+     * Copy default incomes, expenses categories and payment metdods to assigned to users tables in DB
+     *
+     * @param user email
+     *
+     * @return void
+     */
+    public static function setDefaultCategoriesToUser($email){
+        
+        $user = static::findByEmail($email);
+        
+        $sql = 'INSERT INTO incomes_category_assigned_to_users (user_id, name)
+                SELECT ' . $user->id . ', name FROM incomes_category_default';
+        
+        $db = static::getDB();
+        
+        $db->query($sql);
+        
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name)
+                SELECT ' . $user->id . ', name FROM expenses_category_default';
+        
+        $db->query($sql);
+        
+        $sql = 'INSERT INTO payment_methods_assigned_to_users (user_id, name)
+                SELECT ' . $user->id . ', name FROM payment_methods_default';
+        
+        $db->query($sql);
+        
+    }
 }
