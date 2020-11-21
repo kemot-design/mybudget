@@ -2,6 +2,75 @@
 
 {% block title %}Add Income{% endblock %}
 
+{% block footer %}
+
+    //<script src="/js/app.js"></script>
+
+    <script>
+        
+        $.validator.addMethod('dateRange',
+            function(value, element) {
+
+                /*var earliestValidDate = new Date(2000, 0, 1);
+                var today = new Date();
+
+                if (value.getTime() > earliestValidDate.getTime() && value.getTime() <= today.getTime()) 
+                {
+                    return true;
+
+                } else {
+
+                    return false;   
+                }*/
+
+                if(2 > 1)
+                {
+                    return false;
+                }
+                return true;
+            },
+
+            'Please choose date from 2020:01:01 up to today'
+        );
+
+        $(document).ready(function() {
+    
+            /**
+             * Validate the form
+             */
+            $('#formIncome').validate({
+                rules: {
+                    value: {
+                        required: true,
+                        number: true,
+                        range: [0.01, 999999.99]
+                    },
+                    date: {
+                        required: true,
+                        dateISO: true,
+                        dateRange: true
+                    },
+                    category:{
+                        validCategory: true
+                    }
+                }
+            });
+
+
+            /**
+              * Show password toggle button
+              */
+            /*
+            $('#inputPassword').hideShowPassword({
+                show: false,
+                innerToggle: 'focus'
+            });
+            */
+    });
+    </script>
+
+{% endblock %}
+
 {% block body %}
 
     <main>
@@ -17,13 +86,13 @@
 
                 </header>
 
-                <form action="add_new_income.php" method="POST">
+                <form action="/Income/create" method="POST" id="formIncome">
 
                     <div class="row">
                         <div class="col-sm-10 offset-sm-1">
 
                             <label class="formLegend" for="income_value"> Kwota </label>
-                            <input class="form-control" type="number" name="income_value" id="income_value" step="0.01">
+                            <input class="form-control" type="number" name="value" id="income_value" step="0.01" required>
 
                         </div>
                     </div>	
@@ -34,7 +103,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label for="income_date" class="formLegend"> Data </label>
-                            <input class="form-control" type="date" name="income_date">
+                            <input class="form-control" type="date" name="date" required>
 
                         </div>
                     </div>
@@ -44,12 +113,12 @@
                     <div class="row mt-1 ">
                         <div class="col-sm-10 offset-sm-1">
 
-                            <label for="income_category" class="formLegend">Kategoria</label><br/>
-                            <select class="custom-select mr-sm-2" name="income_category">
-                                <option value="0" selected>Wybierz kategorię...</option>
+                            <label for="category" class="formLegend">Kategoria</label><br/>
+                            <select class="custom-select mr-sm-2" name="category" required>
+                                <option value="0" selected disabled>Wybierz kategorię...</option>
                             
                                 {% for category in incomeCategories %}
-                                    <option value="category.id">{{ category.name }}</option>
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
                                 {% endfor %}
 
                             </select>   

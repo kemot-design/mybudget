@@ -42,6 +42,12 @@ class Income extends Authenticated
             'incomeCategories' => $incomeCategories
         ]);
     }
+    
+    public function createAction()
+    {
+        
+        var_dump($_POST);
+    }
 
 
 }
