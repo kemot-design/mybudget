@@ -45,8 +45,9 @@ class Income extends Authenticated
     
     public function createAction()
     {
+        $income = new Incomes($_POST);
         
-        var_dump($_POST);
+        $income->save($this->user->id);
     }
 
 

@@ -39,17 +39,17 @@
              */
             $('#formIncome').validate({
                 rules: {
-                    value: {
+                    amount: {
                         required: true,
                         number: true,
                         range: [0.01, 999999.99]
                     },
-                    date: {
+                    date_of_income: {
                         required: true,
                         dateISO: true,
                         dateRange: true
                     },
-                    comment: {
+                    income_comment: {
                         maxlength: 100
                     }
                 }
@@ -83,7 +83,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label class="formLegend" for="income_value"> Kwota </label>
-                            <input class="form-control" type="number" name="value" id="income_value" step="0.01" required>
+                            <input class="form-control" type="number" name="amount" id="income_value" step="0.01" required>
 
                         </div>
                     </div>	
@@ -94,7 +94,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label for="income_date" class="formLegend"> Data </label>
-                            <input class="form-control" type="date" name="date" id="income_date" required>
+                            <input class="form-control" type="date" name="date_of_income" id="income_date" required>
 
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label for="category" class="formLegend">Kategoria</label><br/>
-                            <select class="custom-select mr-sm-2" name="category" required>
+                            <select class="custom-select mr-sm-2" name="income_category_assigned_to_user_id" required>
                                 <option value="0" selected disabled>Wybierz kategorię...</option>
                             
                                 {% for category in incomeCategories %}
@@ -122,7 +122,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label for="comment" class="formLegend"> Komentarz (opcjonalnie) </label><br>
-                            <textarea class="form-control" id="comment" name="comment" rows="4" cols="44" placeholder="Twój komentarz ..."></textarea>
+                            <textarea class="form-control" id="comment" name="income_comment" rows="4" cols="44" placeholder="Twój komentarz ..."></textarea>
 
                         </div>
                     </div>	
