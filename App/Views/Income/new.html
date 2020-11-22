@@ -76,6 +76,15 @@
                     <h2 class="content-header"><i class="icon-money-1"></i> Dodaj przychód </h2>
 
                 </header>
+                
+                 {% if income.errors is not empty %}
+                    <p class="text-danger">Errors:</p>
+                    <ul class="text-danger text-left pl-3">
+                        {% for error in income.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}               
 
                 <form action="/Income/create" method="POST" id="formIncome">
 

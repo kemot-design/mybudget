@@ -101,7 +101,9 @@ class Incomes extends \Core\Model
     public function validate()
     {
 
-        if ($this->income_category_assigned_to_user_id == '0') {
+        if (!isset($this->income_category_assigned_to_user_id)) {
+            $this->errors[] = 'Category is required';
+        } else if ($this->income_category_assigned_to_user_id == '0') {
             $this->errors[] = 'Category is required';
         }
         
