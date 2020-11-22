@@ -102,7 +102,7 @@ class Expenses extends \Core\Model
      */       
     public function save($userId)
     {
-        //$this->validate();
+        $this->validate();
 
         if (empty($this->errors)) {
 
@@ -132,13 +132,6 @@ class Expenses extends \Core\Model
      */
     public function validate()
     {
-
-        if (!isset($this->income_category_assigned_to_user_id)) {
-            $this->errors[] = 'Category is required';
-        } else if ($this->income_category_assigned_to_user_id == '0') {
-            $this->errors[] = 'Category is required';
-        }
-        
         if ($this->amount == 0) {
             $this->errors[] = 'Amount is required';
         } else if ($this->amount < 0) {
@@ -149,11 +142,23 @@ class Expenses extends \Core\Model
         
         $today = date('Y-m-d');
 
-        if ($this->date_of_income < "2000-01-01" || $this->date_of_income == 0 || $this->date_of_income > $today) {
+        if ($this->date_of_expense < "2000-01-01" || $this->date_of_expense == 0 || $this->date_of_expense > $today) {
             $this->errors[] = 'Select correct date'; 
         }
+
+        if (!isset($this->payment_method)) {
+            $this->errors[] = 'Payment method is required';
+        } else if ($this->payment_method == '0') {
+            $this->errors[] = 'Payment method is required';
+        }
         
-        if(strlen($this->income_comment) > 100){
+        if (!isset($this->expense_category)) {
+            $this->errors[] = 'Category is required';
+        } else if ($this->expense_category == '0') {
+            $this->errors[] = 'Category is required';
+        }
+        
+        if(strlen($this->expense_comment) > 100){
             $this->errors[] = 'Comment cannot be longer than 100 chars';
         }   
     }

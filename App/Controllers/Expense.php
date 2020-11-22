@@ -53,12 +53,15 @@ class Expense extends Authenticated
         if ($expense->save($this->user->id)) {
             
             Flash::addMessage('Expense added');
+            
             $this->redirect('/Expense/new');
             
         } else {
             Flash::addMessage('Incorrect data, please correct the form', Flash::WARNING);
-            View::renderTemplate('Income/new.html',[
+            
+            View::renderTemplate('Expense/new.html',[
                 'expense' => $expense,
+                'paymentMethods' => Expenses::getUserDefinedPaymentMethods($this->user->id),
                 'expenseCategories' => Expenses::getUserAssignedCategories($this->user->id)
             ]);
         }
