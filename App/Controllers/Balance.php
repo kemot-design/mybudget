@@ -38,10 +38,17 @@ class Balance extends Authenticated
        
        $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id);
        
-       var_dump($incomeSumsByCategory);
+       $incomesSum = 0;
+       
+       foreach  ($incomeSumsByCategory as $sum) {
+           $incomesSum += $sum['categorySum'];
+       }
+       
+       $incomesSum = number_format($incomesSum, 2, '.', ' ');
            
        View::renderTemplate('Balance/show.html', [
-           'incomeSums' => $incomeSumsByCategory
+           'categorySums' => $incomeSumsByCategory,
+           'totalIncome' => $incomesSum
        ]);
    
    }

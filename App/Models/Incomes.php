@@ -137,27 +137,27 @@ class Incomes extends \Core\Model
         switch($balancePeriod){
 
             case 1:
-                $income_query = "SELECT name, SUM(amount) AS IncomesSum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_income < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY IncomesSum DESC";
+                $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_income < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
-                $expense_query = "SELECT name, SUM(amount) AS expensesSum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY expensesSum DESC";
+                $expense_query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
                 $balance_header = "BILANS - bierzący miesiąc";
 
                 break;
 
             case 2:
-                $income_query = "SELECT name, SUM(amount) AS IncomesSum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_income < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY IncomesSum DESC";
+                $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_income < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
-                $expense_query = "SELECT name, SUM(amount) AS expensesSum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY expensesSum DESC";
+                $expense_query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
                 $balance_header = "BILANS - poprzedni miesiąc";
 
                 break;
 
             case 3:
-                $income_query = "SELECT name, SUM(amount) AS IncomesSum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND YEAR(date_of_income) = YEAR(CURDATE()) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY IncomesSum DESC";
+                $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND YEAR(date_of_income) = YEAR(CURDATE()) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
-                $expense_query = "SELECT name, SUM(amount) AS expensesSum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY expensesSum DESC";
+                $expense_query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
                 $balance_header = "BILANS - bierzący rok";
 

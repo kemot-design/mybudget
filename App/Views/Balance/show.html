@@ -44,15 +44,15 @@
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
                             
-                            {% for income in incomeSums %}
+                            {% for income in categorySums %}
                                 <tr>
                                     <td>{{ income.name }}</td> 
-                                    <td>{{ income.IncomesSum }}</td>           
+                                    <td>{{ income.categorySum }}</td>           
                                 </tr> 
                             {% endfor %}
                             
                             <tr>
-                                <td class="sum-row"> Suma </td><td class="sum-row"> <?= $sum_of_incomes ?></td>
+                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ totalIncome }}</td>
                             </tr>									
 
                         </table>
