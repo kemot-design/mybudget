@@ -44,7 +44,7 @@
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
                             
-                            {% for income in categorySums %}
+                            {% for income in incomeSumsByCategory %}
                                 <tr>
                                     <td>{{ income.name }}</td> 
                                     <td>{{ income.categorySum }}</td>           
@@ -68,20 +68,15 @@
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
 
-                            <?PHP
-                                if(!empty($expenses)){
-                                    foreach($expenses as $expense){
-                                        echo "<tr><td>".$expense['name']."</td>
-                                        <td>".$expense['expensesSum']."</td></tr>";
-
-                                        $sum_of_expenses += $expense['expensesSum'];
-                                    }    
-                                }
-
-                            ?>
+                            {% for expense in expenseSumsByCategory %}
+                                <tr>
+                                    <td>{{ expense.name }}</td> 
+                                    <td>{{ expense.categorySum }}</td>           
+                                </tr> 
+                            {% endfor %}
 
                             <tr >
-                                <td class="sum-row"> Suma </td><td class="sum-row"> <?= $sum_of_expenses ?> </td>
+                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ totalExpense }}</td>
                             </tr>									
                         </table>						
 
@@ -90,14 +85,14 @@
                 </div>
 
                 <div class="balance-row">
-
-                    <?PHP
-
-                        $balance = $sum_of_incomes - $sum_of_expenses;
-                        echo "Twój bilans: ".$balance." zł <br/>";
-                        echo ($balance >= 0) ? "Brawo, świetnie zarządzasz finansami!" : "Uważaj! Wydajesz więcej niż zarabiasz.";
-
-                    ?>
+                          
+                    Twój bilans: {{ totalIncome - totalExpense }} zł <br/>
+                    {% if totalIncome >= totalExpense %}
+                        Brawo, zarabiasz więcej niż wydajesz.
+                    {% else %}
+                        Uważaj, wydajesz więcej niż zarabiasz!
+                    {% endif %}
+                    
 
                 </div>
 

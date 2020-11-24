@@ -44,11 +44,24 @@ class Balance extends Authenticated
            $incomesSum += $sum['categorySum'];
        }
        
-       $incomesSum = number_format($incomesSum, 2, '.', ' ');
+       //$incomesSum = number_format($incomesSum, 2, '.', ' ');
+       
+       $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id);
+       
+       $expensesSum = 0;
+       
+       foreach  ($expenseSumsByCategory as $sum) {
+           $expensesSum += $sum['categorySum'];
+       }
+       
+      //$expensesSum = number_format($expensesSum, 2, '.', ' ');
            
        View::renderTemplate('Balance/show.html', [
-           'categorySums' => $incomeSumsByCategory,
-           'totalIncome' => $incomesSum
+           'incomeSumsByCategory' => $incomeSumsByCategory,
+           'expenseSumsByCategory' => $expenseSumsByCategory,
+           'totalIncome' => $incomesSum,
+           'totalExpense' => $expensesSum
+           
        ]);
    
    }

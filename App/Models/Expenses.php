@@ -163,4 +163,49 @@ class Expenses extends \Core\Model
         }   
     }
     
+    /**
+     * Get the sums of expenses grouped by category of a specyfic user
+     *
+     * @return associaive array category name as key, sum as value
+     */
+    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1)
+    {
+        
+        switch($balancePeriod){
+
+            case 1:
+                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
+
+                break;
+
+            case 2:
+                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
+
+                break;
+
+            case 3:
+                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
+
+                break;
+        }
+        
+        $db = static::getDB();
+        
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        $stmt->execute();
+        
+        $expenseSums = [];
+        
+        while($resultRow = $stmt->fetch()){
+            $expenseSums[] = $resultRow;
+        }
+        
+        return $expenseSums;
+
+    }
+    
 }
