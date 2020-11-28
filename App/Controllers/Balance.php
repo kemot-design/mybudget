@@ -6,6 +6,7 @@ use \Core\View;
 use \App\Auth;
 use \App\Models\Incomes;
 use \App\Models\Expenses;
+use \App\Flash;
 
 /**
  * Balance controller
@@ -62,11 +63,14 @@ class Balance extends Authenticated
                $balanceHeader = 'cos poszlo nie tak';
             break; 
        }
-             
-       if($balancePeriod == 4){
+        
+       if($balancePeriod != 4) {
+           $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+       } else if ($this->isDataRangeValid($_POST['balance_start_date'], $_POST['balance_end_date'])) {
            $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
        } else {
-           $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+           Flash::addMessage('Wybrano niepoprawne daty, spróbuj ponownie', Flash::WARNING);
+           $this->redirect('/balance/show');
        }
        
        $incomesSum = 0;
@@ -77,10 +81,13 @@ class Balance extends Authenticated
        
        //$incomesSum = number_format($incomesSum, 2, '.', ' ');
        
-       if ($balancePeriod == 4) {
+       if ($balancePeriod != 4) {
+           $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+       } else if ($this->isDataRangeValid($_POST['balance_start_date'], $_POST['balance_end_date'])) {
            $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
        } else {
-           $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+           Flash::addMessage('Wybrano niepoprawne daty, spróbuj ponownie', Flash::WARNING);
+           $this->redirect('/balance/show');
        }
        
        $expensesSum = 0;
@@ -100,6 +107,16 @@ class Balance extends Authenticated
        ]);
    
    }
+    
+    public function isDataRangeValid($startDate, $endDate)
+    {
+        if($startDate == "" || $endDate == "") return false;
+        
+        else if($endDate < $startDate) return false;
+        
+        return true;
+        
+    }
     
 
 }
