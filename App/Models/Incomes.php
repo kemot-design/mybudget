@@ -131,7 +131,7 @@ class Incomes extends \Core\Model
      *
      * @return associaive array category name as key, sum as value
      */
-    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1)
+    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1, $startDate = NULL, $endDate = NULL)
     {
         
         switch($balancePeriod){
@@ -139,35 +139,35 @@ class Incomes extends \Core\Model
             case 1:
                 $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_income < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
-                $expense_query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
-                $balance_header = "BILANS - bierzący miesiąc";
-
                 break;
 
             case 2:
                 $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_income < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
-                $expense_query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
-                $balance_header = "BILANS - poprzedni miesiąc";
-
+                
                 break;
 
             case 3:
                 $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND YEAR(date_of_income) = YEAR(CURDATE()) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
-                $expense_query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
-                $balance_header = "BILANS - bierzący rok";
+                break;
+                
+            case 4:
+                $income_query = "SELECT name, SUM(amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= :startDate AND date_of_income <= :endDate AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
                 break;
+                
         }
         
         $db = static::getDB();
         
         $stmt = $db->prepare($income_query);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        
+        if($balancePeriod == 4 && $startDate != NULL && $endDate != NULL){
+            $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);   
+        }
+
         
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         

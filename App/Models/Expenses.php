@@ -168,7 +168,7 @@ class Expenses extends \Core\Model
      *
      * @return associaive array category name as key, sum as value
      */
-    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1)
+    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1, $startDate = NULL, $endDate = NULL)
     {
         
         switch($balancePeriod){
@@ -187,12 +187,22 @@ class Expenses extends \Core\Model
                 $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
 
                 break;
+                
+            case 4:
+                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= :startDate AND date_of_expense <= :endDate AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
+
+                break;    
         }
         
         $db = static::getDB();
         
         $stmt = $db->prepare($query);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        
+        if($balancePeriod == 4 && $startDate != NULL && $endDate != NULL){
+            $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);   
+        }
         
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         

@@ -36,6 +36,7 @@ class Balance extends Authenticated
    public function showAction()
    {
        $balancePeriod = 1; //default balance perion 1 = current month
+       
        if(isset($_POST['balance_period'])){
            $balancePeriod = $_POST['balance_period'];
        }
@@ -53,22 +54,34 @@ class Balance extends Authenticated
                $balanceHeader = 'bierzący rok';
             break;
                
+            case 4:
+               $balanceHeader = "od " . $_POST['balance_start_date'] . ' do ' . $_POST['balance_end_date'];
+            break;
+               
            default:
                $balanceHeader = 'cos poszlo nie tak';
             break; 
        }
-       
-       $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+             
+       if($balancePeriod == 4){
+           $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
+       } else {
+           $incomeSumsByCategory = Incomes::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+       }
        
        $incomesSum = 0;
        
-       foreach  ($incomeSumsByCategory as $sum) {
+       foreach ($incomeSumsByCategory as $sum) {
            $incomesSum += $sum['categorySum'];
        }
        
        //$incomesSum = number_format($incomesSum, 2, '.', ' ');
        
-       $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+       if ($balancePeriod == 4) {
+           $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
+       } else {
+           $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+       }
        
        $expensesSum = 0;
        
