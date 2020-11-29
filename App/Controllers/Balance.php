@@ -30,7 +30,7 @@ class Balance extends Authenticated
     }
 
     /**
-     * Show default balance view (current month)
+     * Show  balance  (current month as default)
      *
      * @return void
      */
@@ -42,30 +42,16 @@ class Balance extends Authenticated
        $balanceHeader = $this->setBalanceHeader($balancePeriod);
         
        $incomeSumsByCategory = $this->getIncomesByCategory($balancePeriod);
-       
-       $incomesSum = 0;
-       
-       foreach ($incomeSumsByCategory as $sum) {
-           $incomesSum += $sum['categorySum'];
-       }
-       
+          
        //$incomesSum = number_format($incomesSum, 2, '.', ' ');
 
        $expenseSumsByCategory = $this->getExpensesByCategory($balancePeriod);
-       
-       $expensesSum = 0;
-       
-       foreach  ($expenseSumsByCategory as $sum) {
-           $expensesSum += $sum['categorySum'];
-       }
        
       //$expensesSum = number_format($expensesSum, 2, '.', ' ');
            
        View::renderTemplate('Balance/show.html', [
            'incomeSumsByCategory' => $incomeSumsByCategory,
            'expenseSumsByCategory' => $expenseSumsByCategory,
-           'totalIncome' => $incomesSum,
-           'totalExpense' => $expensesSum,
            'header' => $balanceHeader
        ]);
    

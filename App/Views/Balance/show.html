@@ -44,15 +44,17 @@
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
                             
+                            {% set incomeTotalSum = 0 %}
                             {% for income in incomeSumsByCategory %}
                                 <tr>
                                     <td>{{ income.name }}</td> 
-                                    <td>{{ income.categorySum }}</td>           
+                                    <td>{{ income.categorySum }}</td>  
+                                    {% set incomeTotalSum =  incomeTotalSum + income.categorySum %}
                                 </tr> 
                             {% endfor %}
                             
                             <tr>
-                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ totalIncome }}</td>
+                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ incomeTotalSum }}</td>
                             </tr>									
 
                         </table>
@@ -67,16 +69,18 @@
                             <tr class="expenses-header">
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
-
+                            
+                            {% set expenseTotalSum = 0 %}
                             {% for expense in expenseSumsByCategory %}
                                 <tr>
                                     <td>{{ expense.name }}</td> 
-                                    <td>{{ expense.categorySum }}</td>           
+                                    <td>{{ expense.categorySum }}</td>   
+                                    {% set expenseTotalSum =  expenseTotalSum + expense.categorySum %}
                                 </tr> 
                             {% endfor %}
 
                             <tr >
-                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ totalExpense }}</td>
+                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ expenseTotalSum }}</td>
                             </tr>									
                         </table>						
 
@@ -86,7 +90,7 @@
 
                 <div class="balance-row">
                           
-                    Twój bilans: {{ totalIncome - totalExpense }} zł <br/>
+                    Twój bilans: {{ incomeTotalSum - expenseTotalSum }} zł <br/>
                     {% if totalIncome >= totalExpense %}
                         Brawo, zarabiasz więcej niż wydajesz.
                     {% else %}

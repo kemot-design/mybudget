@@ -163,7 +163,7 @@ ul > li:hover > a
 	color: #000;
 }
 
-ul > li:hover
+.nav-item:hover
 {
 	background-color: #46c768;
     border-radius: 5px;
@@ -245,11 +245,6 @@ table, td, th
 th, td
 {
 	padding: 3px 5px;
-}
-
-tr:hover
-{
-	background-color: #efefef;
 }
 
 tr td:nth-child(1)
