@@ -174,32 +174,30 @@ class Expenses extends \Core\Model
         switch($balancePeriod){
 
             case 1:
-                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
+                $date_query = " date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY ";
                 break;
 
             case 2:
-                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
+                $date_query = " date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) ";
                 break;
 
             case 3:
-                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
+                $date_query = " YEAR(date_of_expense) = YEAR(CURDATE()) ";
                 break;
                 
             case 4:
-                $query = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= :startDate AND date_of_expense <= :endDate AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
-
+                $date_query = " date_of_expense >= :startDate AND date_of_expense <= :endDate ";
                 break;    
         }
         
+        $sql = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND " . $date_query . " AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
+        
         $db = static::getDB();
         
-        $stmt = $db->prepare($query);
+        $stmt = $db->prepare($sql);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
         
-        if($balancePeriod == 4 && $startDate != NULL && $endDate != NULL){
+        if ($balancePeriod == 4) {
             $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
             $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);   
         }
