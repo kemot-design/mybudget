@@ -29,7 +29,7 @@
 
                 <header>
 
-                    <h2 class="content-header"><i class="icon-chart-bar"></i> <?= $balance_header ?> </h2>
+                    <h2 class="content-header"><i class="icon-chart-bar"></i> Bilans - {{ header }} </h2>
 
                 </header>								
 
@@ -44,15 +44,17 @@
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
                             
-                            {% for income in incomeSums %}
+                            {% set incomeTotalSum = 0 %}
+                            {% for income in incomeSumsByCategory %}
                                 <tr>
                                     <td>{{ income.name }}</td> 
-                                    <td>{{ income.IncomesSum }}</td>           
+                                    <td>{{ income.categorySum }}</td>  
+                                    {% set incomeTotalSum =  incomeTotalSum + income.categorySum %}
                                 </tr> 
                             {% endfor %}
                             
                             <tr>
-                                <td class="sum-row"> Suma </td><td class="sum-row"> <?= $sum_of_incomes ?></td>
+                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ incomeTotalSum }}</td>
                             </tr>									
 
                         </table>
@@ -67,21 +69,18 @@
                             <tr class="expenses-header">
                                 <th> Kategoria </th><th> Suma </th>
                             </tr>
-
-                            <?PHP
-                                if(!empty($expenses)){
-                                    foreach($expenses as $expense){
-                                        echo "<tr><td>".$expense['name']."</td>
-                                        <td>".$expense['expensesSum']."</td></tr>";
-
-                                        $sum_of_expenses += $expense['expensesSum'];
-                                    }    
-                                }
-
-                            ?>
+                            
+                            {% set expenseTotalSum = 0 %}
+                            {% for expense in expenseSumsByCategory %}
+                                <tr>
+                                    <td>{{ expense.name }}</td> 
+                                    <td>{{ expense.categorySum }}</td>   
+                                    {% set expenseTotalSum =  expenseTotalSum + expense.categorySum %}
+                                </tr> 
+                            {% endfor %}
 
                             <tr >
-                                <td class="sum-row"> Suma </td><td class="sum-row"> <?= $sum_of_expenses ?> </td>
+                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ expenseTotalSum }}</td>
                             </tr>									
                         </table>						
 
@@ -90,18 +89,18 @@
                 </div>
 
                 <div class="balance-row">
-
-                    <?PHP
-
-                        $balance = $sum_of_incomes - $sum_of_expenses;
-                        echo "Twój bilans: ".$balance." zł <br/>";
-                        echo ($balance >= 0) ? "Brawo, świetnie zarządzasz finansami!" : "Uważaj! Wydajesz więcej niż zarabiasz.";
-
-                    ?>
+                          
+                    Twój bilans: {{ incomeTotalSum - expenseTotalSum }} zł <br/>
+                    {% if totalIncome >= totalExpense %}
+                        Brawo, zarabiasz więcej niż wydajesz.
+                    {% else %}
+                        Uważaj, wydajesz więcej niż zarabiasz!
+                    {% endif %}
+                    
 
                 </div>
 
-                <form action="show_balance.php" method="POST">
+                <form action="/balance/show" method="POST">
 
                     <!-- Modal -->
                     <div id="balance_date_modal" class="modal fade" role="dialog">

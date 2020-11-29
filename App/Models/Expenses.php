@@ -163,4 +163,57 @@ class Expenses extends \Core\Model
         }   
     }
     
+    /**
+     * Get the sums of expenses grouped by category of a specyfic user
+     *
+     * @return associaive array category name as key, sum as value
+     */
+    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1, $startDate = NULL, $endDate = NULL)
+    {
+        
+        switch($balancePeriod){
+
+            case 1:
+                $date_query = " date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY ";
+                break;
+
+            case 2:
+                $date_query = " date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) ";
+                break;
+
+            case 3:
+                $date_query = " YEAR(date_of_expense) = YEAR(CURDATE()) ";
+                break;
+                
+            case 4:
+                $date_query = " date_of_expense >= :startDate AND date_of_expense <= :endDate ";
+                break;    
+        }
+        
+        $sql = "SELECT name, SUM(amount) AS categorySum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND " . $date_query . " AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY categorySum DESC";
+        
+        $db = static::getDB();
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        
+        if ($balancePeriod == 4) {
+            $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);   
+        }
+        
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        $stmt->execute();
+        
+        $expenseSums = [];
+        
+        while($resultRow = $stmt->fetch()){
+            $expenseSums[] = $resultRow;
+        }
+        
+        return $expenseSums;
+
+    }
+    
 }

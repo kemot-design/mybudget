@@ -131,43 +131,41 @@ class Incomes extends \Core\Model
      *
      * @return associaive array category name as key, sum as value
      */
-    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1)
+    public static function getSumsGroupedByCategory($userId, $balancePeriod = 1, $startDate = NULL, $endDate = NULL)
     {
         
         switch($balancePeriod){
 
             case 1:
-                $income_query = "SELECT name, SUM(amount) AS IncomesSum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_income < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY IncomesSum DESC";
-
-                $expense_query = "SELECT name, SUM(amount) AS expensesSum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY expensesSum DESC";
-
-                $balance_header = "BILANS - bierzący miesiąc";
-
+                $date_query = " date_of_income >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_income < LAST_DAY(CURDATE()) + INTERVAL 1 DAY ";
                 break;
 
             case 2:
-                $income_query = "SELECT name, SUM(amount) AS IncomesSum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND date_of_income >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_income < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY IncomesSum DESC";
-
-                $expense_query = "SELECT name, SUM(amount) AS expensesSum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY expensesSum DESC";
-
-                $balance_header = "BILANS - poprzedni miesiąc";
-
+                $date_query = " date_of_income >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_income < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) "; 
                 break;
 
             case 3:
-                $income_query = "SELECT name, SUM(amount) AS IncomesSum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND YEAR(date_of_income) = YEAR(CURDATE()) AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY IncomesSum DESC";
-
-                $expense_query = "SELECT name, SUM(amount) AS expensesSum FROM expenses_category_assigned_to_users, expenses WHERE expenses.user_id = :user_id AND YEAR(date_of_expense) = YEAR(CURDATE()) AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY expensesSum DESC";
-
-                $balance_header = "BILANS - bierzący rok";
-
+                $date_query = " YEAR(date_of_income) = YEAR(CURDATE()) ";
                 break;
+                
+            case 4:
+                $date_query = " date_of_income >= :startDate AND date_of_income <= :endDate ";
+                break;        
         }
+        
+        $sql = "SELECT incomes_category_assigned_to_users.name, SUM(incomes.amount) AS categorySum FROM incomes_category_assigned_to_users, incomes WHERE incomes.user_id = :user_id AND " . $date_query . " AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY incomes_category_assigned_to_users.name ORDER BY categorySum DESC";
         
         $db = static::getDB();
         
-        $stmt = $db->prepare($income_query);
+        $stmt = $db->prepare($sql);
         $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        
+        if ($balancePeriod == 4) {
+            
+            $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);   
+        }
+
         
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         
