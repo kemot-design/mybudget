@@ -51,11 +51,11 @@ class Income extends Authenticated
         
         if ($income->save($this->user->id)) {
             
-            Flash::addMessage('Income added');
+            Flash::addMessage('Przychód dodany');
             $this->redirect('/Income/new');
             
         } else {
-            Flash::addMessage('Incorrect data, please correct the form', Flash::WARNING);
+            Flash::addMessage('Niepoprawne dane, popraw formularz', Flash::WARNING);
             View::renderTemplate('Income/new.html',[
                 'income' => $income,
                 'incomeCategories' => Incomes::getUserAssignedCategories($this->user->id)

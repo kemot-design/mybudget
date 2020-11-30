@@ -52,12 +52,12 @@ class Expense extends Authenticated
         
         if ($expense->save($this->user->id)) {
             
-            Flash::addMessage('Expense added');
+            Flash::addMessage('Wydatek dodany');
             
             $this->redirect('/Expense/new');
             
         } else {
-            Flash::addMessage('Incorrect data, please correct the form', Flash::WARNING);
+            Flash::addMessage('Niepoprawne dane, popraw formularz', Flash::WARNING);
             
             View::renderTemplate('Expense/new.html',[
                 'expense' => $expense,

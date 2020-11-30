@@ -52,6 +52,24 @@
                     income_comment: {
                         maxlength: 100
                     }
+                },
+                messages: {
+                    amount: {
+                        required: 'pole wymagane',
+                        number: 'wpisz liczbę',
+                        range: 'wpisz liczbę z zakresu od 0.01 do 999 999.99'
+                    },
+                    date_of_income: {
+                        required: 'pole wymagane',
+                        dateISO: 'nipoprawny format daty',
+                        dateRange: 'data nie może być wcześniejsza niż 01-01-2000 i poźniejsza niż dzisiejsza'
+                    },
+                    income_comment: {
+                        maxlength: 'przekroczono maksymalną liczbę znaków'
+                    },
+                    income_category_assigned_to_user_id: {
+                        required: 'pole wymagane'
+                    }
                 }
             });
 

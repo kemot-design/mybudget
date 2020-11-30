@@ -70,13 +70,13 @@ class Balance extends Authenticated
     {
         if($startDate == "" || $endDate == "") {
         
-            Flash::addMessage('PLease select start and end date of balance period', Flash::WARNING);
+            Flash::addMessage('Proszę wybrać datę początkową i końcową bilansu', Flash::WARNING);
             
             return false;  
             
         } else if ($endDate < $startDate) {
         
-            Flash::addMessage('End date cannot be earlier than start date', Flash::WARNING);
+            Flash::addMessage('Data końcowa nie może być wcześniej niż początkowa', Flash::WARNING);
             
             return false;    
         } 

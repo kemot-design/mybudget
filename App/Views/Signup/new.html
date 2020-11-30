@@ -32,8 +32,22 @@
                     }
                 },
                 messages: {
+                    name: {
+                        required: 'pole wymagane'  
+                    },
                     email: {
-                        remote: 'email already taken'
+                        required: 'pole wymagane',
+                        email: 'niepoprawny format adresu email',
+                        remote: 'adres email zajęty'
+                    },
+                    password: {
+                        required: 'pole wymagane',
+                        minlength: 'hasło musi mieć minimum 6 znaków',
+                        validPassword: 'hasło musi zawierać przynajmniej jedną literę i liczbę'
+                    },
+                    password_again: {
+                        required: 'pole wymagane',
+                        equalTo: 'podane hasła muszą być identyczne'
                     }
                 }
             });

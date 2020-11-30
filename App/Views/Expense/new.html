@@ -52,6 +52,27 @@
                     expense_comment: {
                         maxlength: 100
                     }
+                },
+                messages: {
+                    amount: {
+                        required: 'pole wymagane',
+                        number: 'wpisz liczbę',
+                        range: 'wpisz liczbę z zakresu od 0.01 do 999 999.99'
+                    },
+                    date_of_expense: {
+                        required: 'pole wymagane',
+                        dateISO: 'nipoprawny format daty',
+                        dateRange: 'data nie może być wcześniejsza niż 01-01-2000 i poźniejsza niż dzisiejsza'
+                    },
+                    expense_comment: {
+                        maxlength: 'przekroczono maksymalną liczbę znaków'
+                    },
+                    payment_method: {
+                        required: 'pole wymagane'    
+                    },
+                    expense_category: {
+                        required: 'pole wymagane'
+                    }
                 }
             });
 
