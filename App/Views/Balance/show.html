@@ -5,14 +5,19 @@
 {% block footer %}
 
 <script>
-    function myFunction() {
+    
+    $("#balance_period").change(function() {
         var option_value = document.getElementById("balance_period").value;
         if (option_value == "4") {
              $("#balance_date_modal").modal({
                 show: true 
              });
+        } else {
+            document.getElementById("balance_period").setAttribute("value", option_value);
+            document.getElementById("balanceForm").submit();
         }
-    }
+    });
+    
 </script>
 
 {% endblock %}
@@ -100,7 +105,7 @@
 
                 </div>
 
-                <form action="/balance/show" method="POST">
+                <form action="/balance/show" method="POST" id="balanceForm">
 
                     <!-- Modal -->
                     <div id="balance_date_modal" class="modal fade" role="dialog">
@@ -149,7 +154,8 @@
                         <div class="col-md-6">
 
                             <label for="balance-date"> Wybierz okres: </label>
-                            <select	class="custom-select mb-2" name="balance_period" id="balance_period" onchange = "myFunction()">
+                            <select	class="custom-select mb-2" name="balance_period" id="balance_period" >
+                                <option value="" selected disabled hidden>Wybierz tutaj</option>
                                 <option value="1">Bierzący miesiąc</option>
                                 <option value="2">Poprzedni miesiąc</option>
                                 <option value="3">Bierzący rok</option>
@@ -157,9 +163,12 @@
                             </select>
                         </div>
 
+                        <!-- since I have written submitting form in changeBudgetPeriod() function without the need to push a ubmit button, we no longer need the button
                         <div class="col-md-6 my-1">
                            <input type="submit" class="btn btn-success btn-block mt-3" value="Pokaż bilans">
                         </div>
+                        -->
+                        
                     </div>
                 </form>	
 
