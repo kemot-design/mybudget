@@ -320,3 +320,41 @@ img{
 .alert-warning {
     background-color: #fcf8e3;
 }
+
+.card {
+	background-color: #dedede;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .5rem;
+}
+
+.card-header {
+    padding: 0;
+    text-align: left;
+}
+
+.btn-block {
+    font-size: 18px;
+    color: darkgreen;
+    padding: 10px 20px;
+}
+
+.card-body {
+    text-align: left;
+}
+
+.line {
+    margin: 0;
+}
+
+.settingsItem {
+    font-size: 16px;
+    padding: 8px 0;
+}
+
+.edit-btn:hover {
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    cursor: pointer;
+}
