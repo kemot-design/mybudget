@@ -43,7 +43,7 @@ class Expenses extends \Core\Model
     public static function getUserAssignedCategories($userId)
     {
         
-        $sql = 'SELECT id, name FROM expenses_category_assigned_to_users
+        $sql = 'SELECT id, name, monthly_limit FROM             expenses_category_assigned_to_users
                 WHERE user_id = :id';
         
         $db = static::getDB();
@@ -214,6 +214,58 @@ class Expenses extends \Core\Model
         
         return $expenseSums;
 
+    }
+    
+    public static function editExpenseCategory($userId, $ctgId, $newName) 
+    {
+        
+        $db = static::getDB();
+        
+        $sql = "UPDATE expenses_category_assigned_to_users
+                SET name = :newName
+                WHERE user_id = :userId AND id = :ctgId";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":newName", $newName, PDO::PARAM_STR);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+        
+    }
+    
+    public static function deleteExpenseCategory($userId, $ctgId) 
+    {
+        
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM expenses_category_assigned_to_users
+                WHERE user_id= :userId AND id = :ctgId";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+        
+    }
+    
+    public static function changeExpenseCategoryLimit($userId, $ctgId, $limit)
+    {
+        
+        $db = static::getDB();
+        
+        $sql = "UPDATE expenses_category_assigned_to_users
+                SET monthly_limit = :newLimit
+                WHERE user_id = :userId AND id = :ctgId";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
+        $stmt->bindValue(":newLimit", $limit, PDO::PARAM_STR);
+        
+        return $stmt->execute();
+        
     }
     
 }

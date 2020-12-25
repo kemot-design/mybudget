@@ -4,22 +4,13 @@
 
 {% block footer %}
 
-    <script>
-         
-        $('.edit-btn').on("click", function() {
-            
-            var ctgName = $(this).data('categoryName');
-            
-            $("#edit-category-modal").modal({
-                show: true 
-            });     
-            
-            $('#category_name_edit').attr('value', ctgName);
-        }); 
+<script>
 
-        
+    var userId = '{{ current_user.id }}';
 
-    </script>
+</script>
+
+<script src="/js/settings.js"></script>
 
 {% endblock %}
 
@@ -64,66 +55,111 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                       <div class="card-body">
                         
-                        {% set expCtgsNumber = expenseCategories|length %}
-                        <span id="expCtgsNumber" data-exp-ctgs-number="{{ expCtgsNumber }}"></span>
                         {% for category in expenseCategories %}
-                            <div class="settingsItem">
+                          
+                            <div class="expenseCategory" id="expenseCtgItem{{ category.id }}">
                                 
-                                {{ category.name }}
+                                <span id="ctgId{{ category.id }}">{{ category.name }}</span>
                                 
-                                <span class="delete-btn">
+                                <span class="delete-btn" data-category-id="{{ category.id }}">
                                     <img src="/img/clear.png" class="float-right ml-2"/>
                                 </span>
                                 
-                                <span class="edit-btn" id="{{ 'editBtn' ~  loop.index }}" data-category-name="{{ category.name }}">
+                                <span class="edit-btn" id="editBtnCtg{{ category.id }}" data-category-id="{{ category.id }}">
                                     <img src="/img/edit2.png" class="float-right"/>
                                 </span>
                                 
-                                <!-- Modal -->
-                                <div id="edit-category-modal" class="modal fade" role="dialog">
-                                  <div class="modal-dialog">
+                                {% if category.monthly_limit > 0 %}
+                                    <div class='ctgLimit'> Limit: <span id="ctgLimit{{category.id}}">{{ category.monthly_limit }}</span></div>
+                                {% endif %}
+                                
+                                <hr class="line"/>
+                                
+                            </div>           
+                          
+                            
 
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h4 class="modal-title text-center">Edycja kategori</h4>
-                                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
-                                      </div>
-                                      <div class="modal-body">
+                        {% endfor %}   
+                                
+                        <!-- Edit Modal -->
+                        <div id="edit-category-modal" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
 
-                                        <div class="row">
-                                            <div class="col-sm-10 offset-sm-1">
+                              <div class="modal-header">
+                                <h4 class="modal-title text-center">Edycja kategori</h4>
+                                <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                              </div>
+                              <div class="modal-body">
 
-                                                <label for="category_name" class="formLegend"> Nazwa kategori </label><br/>
-                                                <input class="form-control" id="category_name_edit" type="text" name="category_name">
+                                <div class="row">
+                                    <div class="col-sm-10 offset-sm-1">
 
-                                            </div>
+                                        <input type="hidden" id="category-id" data-category-id="{{ category.id }}" value="{{ category.id }}">
+                                        <label for="category_name" class="formLegend"> Nazwa kategori </label><br/>
+                                        <input class="form-control category_name_edit" type="text" name="category_name">
 
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-10 offset-sm-1">
-
-                                                <label for="category_limit" class="formLegend"> Miesięczny limit </label><br/>
-                                                <input class="form-control" type="number" name="category_limit">
-
-                                            </div>
-
-                                        </div> 
-                                      </div>
-
-                                      <div class="modal-footer">
-                                        <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
-                                         <input type="submit" class="btn btn-block btn-primary mt-2" value="Zapisz zmiany"> 
-                                      </div>
                                     </div>
 
-                                  </div>
                                 </div>
 
-                            </div><hr class="line"/>
-                          
-                        {% endfor %}
+                                <div class="row">
+                                    <div class="col-sm-10 offset-sm-1">
+                                        <input type="checkbox" id="setLimit">
+                                        <label for="setLimit" class="formLegend"> Ustaw limit dla kategori </label><br/>
+
+                                        <label for="category_limit" class="formLegend"> Miesięczny limit </label><br/>
+                                        <input class="form-control category_limit_edit" type="number" name="category_limit" disabled>
+
+                                    </div>
+
+                                </div> 
+                              </div>
+
+                              <div class="modal-footer">
+                                <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
+
+                                  <button type="button" class="btn btn-primary save-btn" data-dismiss="modal">Zapisz zmiany</button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Delete Modal -->
+                        <div id="delete-category-modal" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title text-center">Usunięcie kategori</h4>
+                                <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                              </div>
+                              <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-sm-10 offset-sm-1">
+
+                                        <p>Usunąć kategorię <span id="ctgToDel"></span> ?</p>
+
+                                    </div>
+
+                                </div>
+                              </div>
+
+                              <div class="modal-footer">
+                                <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
+                                 <input type="submit" id="del-ctg-btn" class="btn btn-block btn-primary mt-2" value="Usuń" data-dismiss="modal"> 
+                                 <input type="submit" class="cancel-btn btn btn-block btn-warning mt-2" value="Anuluj" data-dismiss="modal">
+
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                       

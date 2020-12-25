@@ -334,7 +334,6 @@ img{
 
 .btn-block {
     font-size: 18px;
-    color: darkgreen;
     padding: 10px 20px;
 }
 
@@ -343,7 +342,7 @@ img{
 }
 
 .line {
-    margin: 0;
+    margin: 10px 0 0 0;
 }
 
 .settingsItem {
@@ -357,4 +356,13 @@ img{
 
 .delete-btn:hover {
     cursor: pointer;
+}
+
+.expenseCategory {
+    margin-top: 10px;
+}
+
+.ctgLimit {
+    color: dimgray;
+    font-size: 0.9rem;
 }
