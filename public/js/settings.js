@@ -1,49 +1,53 @@
 
-var editingCtgId = "";
-
-
-$('.edit-btn').on("click", function() {
-
-    editingCtgId = $(this).data('categoryId');
-    var editingCtgName = $('#ctgId' + editingCtgId).html();
-
-    $("#edit-category-modal").modal({
-        show: true 
-    });     
-
-    $('.category_name_edit').val(editingCtgName);
+$(document).ready(function() {
     
-    if($("#ctgLimit" + editingCtgId).length) {
-        
-        $("#setLimit").attr("checked", true);
-        
-        $(".category_limit_edit").attr("disabled", false);
-        
-        var currentLimit = $("#ctgLimit" + editingCtgId).text();
+    var editingCtgId = "";
 
-        $(".category_limit_edit").val(currentLimit);
+
+    $('.edit-btn').on("click", function() {
         
-    } else {
-        
-        $("#setLimit").attr("checked", false);
-        
-        $(".category_limit_edit").attr("disabled", true);
-    }
+        editingCtgId = $(this).data('categoryId');
+        var editingCtgName = $('#ctgId' + editingCtgId).text();
 
-}); 
+        $("#edit-category-modal").modal({
+            show: true 
+        });     
 
-$('.delete-btn').on("click", function() {
+        $('.category_name_edit').val(editingCtgName);
 
-    editingCtgId = $(this).data('categoryId');
-    var ctgName = $('#ctgId' + editingCtgId).html();
-    $("#ctgToDel").html(ctgName);
+        if($("#ctgLimit" + editingCtgId).length) {
 
-    $("#delete-category-modal").modal({
-        show: true 
+            $(".setLimit").attr("checked", true);
+
+            $(".category-limit").attr("disabled", false);
+
+            var currentLimit = $("#ctgLimit" + editingCtgId).text();
+
+            $(".category-limit").val(currentLimit);
+
+        } else {
+
+            $(".setLimit").attr("checked", false);
+
+            $(".category-limit").attr("disabled", true);
+
+            $(".category-limit").val('');
+        }
+
     }); 
-}); 
 
-$(document).ready( function() {
+    $('.delete-btn').on("click", function() {
+
+        editingCtgId = $(this).data('categoryId');
+        var ctgName = $('#ctgId' + editingCtgId).html();
+        $("#ctgToDel").html(ctgName);
+
+        $("#delete-category-modal").modal({
+            show: true 
+        }); 
+    }); 
+
+
 
     $(".save-btn").click( function() {
 
@@ -61,7 +65,7 @@ $(document).ready( function() {
             }
         });
         
-        if($('#setLimit').is(":checked")) {
+        if($('.setLimit').is(":checked")) {
                       
             var newCtgLimit = $(".category_limit_edit").val();
             
@@ -74,11 +78,18 @@ $(document).ready( function() {
                     ctgId: editingCtgId
                 },
                 success: function(response) {
-                    if(response == "success") {
-                        var ctgLimit = "<div class='ctgLimit' id='ctgLimit" + editingCtgId + "'> Limit: </div>";
-                        $("#editBtnCtg" + editingCtgId).after(ctgLimit);
-
-                        $("#ctgLimit" + editingCtgId).append(newCtgLimit);    
+                    if(response == "success") {                                    
+                        if($("#ctgLimit" + editingCtgId).length) {
+                            
+                            $("#ctgLimit" + editingCtgId).text(newCtgLimit);
+                            
+                        } else {
+                            var ctgLimit = "<div class='ctgLimit'> Limit: <span id='ctgLimit" + editingCtgId + "'>" + newCtgLimit + "</span></div>";
+                            
+                            $("#editBtnCtg" + editingCtgId).after(ctgLimit);
+                            //$("#ctgLimit" + editingCtgId).append(newCtgLimit);
+                        }
+                        
                     } else {
                         alert("Nie udao się zmienić limitu dla kategori");
                     }
@@ -86,13 +97,31 @@ $(document).ready( function() {
             });
             
         } else {
-            alert("limit not set");
+            
+            $.ajax({
+                type: "POST",
+                url: "http://localhost/settings/changeExpenseCategoryLimit",
+                data: {
+                    ctgLimit: 0,
+                    userId: userId,
+                    ctgId: editingCtgId
+                },
+                success: function(response) {
+                    if(response == "success") {                                    
+                        if($("#ctgLimit" + editingCtgId).length) {
+                            
+                            $("#ctgLimit" + editingCtgId).parent().remove();   
+                        }           
+                    } else {
+                        alert("Nie udao się zmienić limitu dla kategori");
+                    }
+                }
+            });
+            
         }
     }); 
 
-});
 
-$(document).ready(function(){
     $("#del-ctg-btn").click(function(){
 
         $.ajax({
@@ -109,17 +138,62 @@ $(document).ready(function(){
         });  
     });
 
-});
 
-$(document).ready(function(){
-    $('#setLimit').click(function(){
+    $('.setLimit').click(function(){
         if($(this).is(":checked")){
-            $(".category_limit_edit").removeAttr("disabled");
+            $(".category-limit").removeAttr("disabled");
         } else {
-            $(".category_limit_edit").val("");
-            $(".category_limit_edit").attr("disabled", true);
+            $(".category-limit").val("");
+            $(".category-limit").attr("disabled", true);
         }
     });
+    
+    $("#addNewExpCtg").click(function() {
+        
+        $("#new-category-modal").modal({
+            show: true 
+        });
+        
+        $('.category_name_edit').val('');
+        $('#new-category-limit').val('');
+    });
+                             
+
+    $("#save-new-ctg-btn").click(function(){
+
+        var ctgName = $(".category-name").val();
+        var ctgLimit = $("#new-category-limit").val();
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/settings/addExpenseCategory",
+            data: {
+                name: ctgName,
+                limit: ctgLimit
+            },
+            success: function(response) {
+               if (response != "failure") {
+                    
+                   var newCategoryElement = '<div class="expenseCategory" id="expenseCtgItem' + response + '"><span id="ctgId' + response + '">' + ctgName + '</span><span class="delete-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="edit-btn" id="editBtnCtg' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
+                                    
+                    if(ctgLimit != "") {
+                        newCategoryElement = newCategoryElement + '<div class="ctgLimit"> Limit: <span id="ctgLimit' + response + '">' + ctgLimit + '</span></div>';
+                    }            
+                    
+                   newCategoryElement = newCategoryElement + '<hr class="line"/></div>';
+                   
+                   $("#addNewExpCtg").before(newCategoryElement);
+                   
+                } else {
+                    alert("New category havent been added");
+                } 
+            }
+
+        });   
+
+    });
+        
+    
 });
 
 

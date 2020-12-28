@@ -81,6 +81,25 @@ class Settings extends \Core\Controller
             echo "failure";
         }
     }
+    
+    public function addExpenseCategory()
+    {
+        $this->user = Auth::getUser();
+        $userId = $userId = $this->user->id;
+        
+        $ctgName = $_POST['name'];
+        $ctgLimit = $_POST['limit'];
+        
+        $newCtgId = Expenses::addExpenseCategory($userId, $ctgName, $ctgLimit);
+        
+        if($newCtgId > 0) {
+            echo $newCtgId;
+        } else {
+            echo "failure";
+        }
+        
+    }
+    
 }
 
 

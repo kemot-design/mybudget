@@ -79,7 +79,12 @@
                           
                             
 
-                        {% endfor %}   
+                        {% endfor %}  
+                          
+                        <div id="addNewExpCtg">
+                            <img src="/img/add.png">
+                            Dodaj nową kategorię
+                        </div>
                                 
                         <!-- Edit Modal -->
                         <div id="edit-category-modal" class="modal fade" role="dialog">
@@ -106,11 +111,11 @@
 
                                 <div class="row">
                                     <div class="col-sm-10 offset-sm-1">
-                                        <input type="checkbox" id="setLimit">
-                                        <label for="setLimit" class="formLegend"> Ustaw limit dla kategori </label><br/>
+                                        <input type="checkbox" class="setLimit" id="limitSetEdit">
+                                        <label for="limitSetEdit" class="formLegend"> Ustaw limit dla kategori </label><br/>
 
                                         <label for="category_limit" class="formLegend"> Miesięczny limit </label><br/>
-                                        <input class="form-control category_limit_edit" type="number" name="category_limit" disabled>
+                                        <input class="form-control category-limit" type="text" name="category_limit" disabled>
 
                                     </div>
 
@@ -159,6 +164,51 @@
 
                           </div>
                         </div>
+                          
+                        <!-- Add new Modal -->
+                        <div id="new-category-modal" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+
+                              <div class="modal-header">
+                                <h4 class="modal-title text-center">Dodanie nowej kategori wydatków</h4>
+                                <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                              </div>
+                              <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-sm-10 offset-sm-1">
+
+                                        <label for="category_name" class="formLegend"> Nazwa kategori </label><br/>
+                                        <input class="form-control category-name" type="text" name="category_name">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-10 offset-sm-1">
+                                        <input type="checkbox" class="setLimit" id="limitSetAdd">
+                                        <label for="limitSetAdd" class="formLegend"> Ustaw limit dla kategori </label><br/>
+
+                                        <label for="new-category-limit" class="formLegend"> Miesięczny limit </label><br/>
+                                        <input class="form-control category-limit" id="new-category-limit" type="text" disabled>
+
+                                    </div>
+
+                                </div> 
+                              </div>
+
+                              <div class="modal-footer">
+                                <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
+
+                                  <button type="button" class="btn btn-primary" id="save-new-ctg-btn" data-dismiss="modal">Dodaj nową kategorię</button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>  
 
                       </div>
                     </div>

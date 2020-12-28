@@ -268,4 +268,35 @@ class Expenses extends \Core\Model
         
     }
     
+    public static function addExpenseCategory($userId, $ctgName, $ctgLimit)
+    {
+        $db = static::getDB();
+        
+        $sql = "INSERT INTO expenses_category_assigned_to_users (user_id, name, monthly_limit)
+                VALUES(:userId, :ctgName, :ctgLimit)";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgName", $ctgName, PDO::PARAM_STR);
+        $stmt->bindValue(":ctgLimit", $ctgLimit, PDO::PARAM_STR);
+        
+        if($stmt->execute()) {
+            
+            $sql = "SELECT id FROM expenses_category_assigned_to_users
+                    WHERE user_id = :userId AND name = :ctgName";
+            
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+            $stmt->bindValue(":ctgName", $ctgName, PDO::PARAM_STR);
+            
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $stmt->execute();
+            
+            $result = $stmt->fetch();
+            $newCtgId = $result['id'];
+            
+            return $newCtgId;
+        }
+    }
+    
 }

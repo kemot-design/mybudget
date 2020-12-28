@@ -366,3 +366,12 @@ img{
     color: dimgray;
     font-size: 0.9rem;
 }
+
+#addNewExpCtg {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#addNewExpCtg img {
+    margin-bottom: 5px;
+}
