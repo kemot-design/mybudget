@@ -185,7 +185,7 @@ $(document).ready(function() {
                    $("#addNewExpCtg").before(newCategoryElement);
                    
                 } else {
-                    alert("New category havent been added");
+                    alert("New category haven't been added");
                 } 
             }
 

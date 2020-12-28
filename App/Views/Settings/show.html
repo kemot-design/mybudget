@@ -245,7 +245,54 @@
                       
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
                       <div class="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        
+                        <div class="userData">
+                                
+                            Nazwa użytkownika: <strong>{{ current_user.name}}</strong>
+
+                            <span id="edit-user-name" class="edit-user-profile">
+                                <img src="/img/edit2.png" class="float-right"/>
+                            </span>
+
+                            <hr class="line"/>
+                                
+                        </div>     
+                          
+                        <div class="userData">
+                                
+                            Adres email: <strong>{{ current_user.email}}</strong>
+
+                            <span id="edit-user-email" class="edit-user-profile">
+                                <img src="/img/edit2.png" class="float-right"/>
+                            </span>
+
+                            <hr class="line"/>
+                                
+                        </div>     
+                            
+                        <div class="userData">
+                            
+                            Zmień hasło
+                            
+                            <span id="edit-user-password" class="edit-user-profile">
+                                <img src="/img/edit2.png" class="float-right"/>
+                            </span>
+                            
+                            <hr class="line"/>
+                                
+                        </div>   
+                          
+                        <div class="userData">
+                            
+                            <span id="delete-user" class="edit-user-profile">
+                                <img src="/img/clear.png" class="edit-profile-pic"/>
+                                Usuń konto
+                            </span>
+                            
+                            <hr class="line"/>
+                                
+                        </div>   
+                          
                       </div>
                     </div>
                       

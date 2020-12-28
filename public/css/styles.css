@@ -375,3 +375,15 @@ img{
 #addNewExpCtg img {
     margin-bottom: 5px;
 }
+
+.userData {
+    margin-top: 20px;
+}
+
+.edit-profile-pic {
+    margin-bottom: 10px;
+}
+
+.edit-user-profile:hover {
+    cursor: pointer;
+}
