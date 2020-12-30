@@ -216,17 +216,18 @@ class Expenses extends \Core\Model
 
     }
     
-    public static function editExpenseCategory($userId, $ctgId, $newName) 
+    public static function editExpenseCategory($userId, $ctgId, $newName, $newLimit) 
     {
         
         $db = static::getDB();
         
         $sql = "UPDATE expenses_category_assigned_to_users
-                SET name = :newName
+                SET name = :newName, monthly_limit = :newLimit
                 WHERE user_id = :userId AND id = :ctgId";
         
         $stmt = $db->prepare($sql);
         $stmt->bindValue(":newName", $newName, PDO::PARAM_STR);
+        $stmt->bindValue(":newLimit", $newLimit, PDO::PARAM_STR);
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
         $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
         
@@ -245,24 +246,6 @@ class Expenses extends \Core\Model
         $stmt = $db->prepare($sql);
         $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
         $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
-        
-        return $stmt->execute();
-        
-    }
-    
-    public static function changeExpenseCategoryLimit($userId, $ctgId, $limit)
-    {
-        
-        $db = static::getDB();
-        
-        $sql = "UPDATE expenses_category_assigned_to_users
-                SET monthly_limit = :newLimit
-                WHERE user_id = :userId AND id = :ctgId";
-        
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
-        $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
-        $stmt->bindValue(":newLimit", $limit, PDO::PARAM_STR);
         
         return $stmt->execute();
         

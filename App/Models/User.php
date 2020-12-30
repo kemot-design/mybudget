@@ -274,7 +274,9 @@ class User extends \Core\Model
         $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $expiry_timestamp), PDO::PARAM_STR);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        return $stmt->execute();
+        $stmt->execute();
+        
+        return "no errors";
     }
 
     /**
@@ -455,7 +457,7 @@ class User extends \Core\Model
             return $stmt->execute();
         }
 
-        return false;
+        return $this->errors;
     }
     
     /**

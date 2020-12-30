@@ -387,3 +387,11 @@ img{
 .edit-user-profile:hover {
     cursor: pointer;
 }
+
+.user-data {
+    font-weight: bold;
+}
+
+#profile-edit-err {
+    color: red;
+}
