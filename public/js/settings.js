@@ -192,6 +192,9 @@ $(document).ready(function() {
                     $("#user-settings-modal").modal('hide');
                     $("#profile-edit-err").html("");
                     
+                    $("#user-name").text(newName);
+                    $("#user-email").text(newEmail);
+                    
                 } else {
                             
                     var errorMsg = "";
@@ -214,6 +217,14 @@ $(document).ready(function() {
         $("#profile-edit-err").html("");
     });
     
+    $("#user-delete-modal-btn").click(function(){
+        $("#user-delete-modal").modal('show');
+    });
+    
+    $("#user-delete-btn").click(function(){
+        window.location.href = "/settings/deleteUser";
+    });
+     
 });
 
 

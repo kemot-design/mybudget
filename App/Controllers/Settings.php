@@ -102,6 +102,23 @@ class Settings extends \Core\Controller
         }
     }
     
+    public function deleteUser()
+    {
+        $user = Auth::getUser();
+        $user->deleteUser();
+        
+        Auth::logout();
+        $this->redirect('/settings/show-user-delete-message');    
+    }
+    
+    public function showUserDeleteMessageAction()
+    {
+
+        Flash::addMessage('Konto zostało usunięte');
+
+        $this->redirect('/');
+    }
+    
 }
 
 

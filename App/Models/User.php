@@ -489,4 +489,23 @@ class User extends \Core\Model
         $db->query($sql);
         
     }
+    
+    public function deleteUser()
+    {
+        
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM users
+                WHERE id = :userId";
+        
+        $stmt = $db->prepare($sql);
+        
+        $stmt->bindValue(":userId", $this->id, PDO::PARAM_INT);
+        
+        if($stmt->execute() == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
