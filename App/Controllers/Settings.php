@@ -83,17 +83,17 @@ class Settings extends \Core\Controller
     public function addExpenseCategory()
     {
         $this->user = Auth::getUser();
-        $userId = $userId = $this->user->id;
+        $userId = $this->user->id;
         
         $ctgName = $_POST['name'];
-        $ctgLimit = $_POST['limit'];
+        $ctgLimit = $_POST['limit'] ?? 0;
         
-        $newCtgId = Expenses::addExpenseCategory($userId, $ctgName, $ctgLimit);
+        $addNewCategoryResponse = Expenses::addExpenseCategory($userId, $ctgName, $ctgLimit);
         
-        if($newCtgId > 0) {
-            echo $newCtgId;
+        if($addNewCategoryResponse == "success") {
+            echo Expenses::getNewCategoryId($ctgName, $userId);
         } else {
-            echo "failure";
+            echo $addNewCategoryResponse;
         }
         
     }

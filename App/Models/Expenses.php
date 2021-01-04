@@ -216,7 +216,7 @@ class Expenses extends \Core\Model
 
     }
     
-    public static function isNewCategoryNameUnique($newName, $userId)
+    public static function isCategoryNameUnique($newName, $userId)
     {
         $db = static::getDB();
         
@@ -253,13 +253,13 @@ class Expenses extends \Core\Model
             $userId = $categoryToEdit['userId'];
             $newName = $categoryToEdit['newCtgName'];
             
-            if(Expenses::isNewCategoryNameUnique($newName, $userId) == false) {
+            if(Expenses::isCategoryNameUnique($newName, $userId) == false) {
                 return "Nazwa kategori już istnieje";
             }
         }
         
         if(Expenses::isCategoryLimitValidNumber($categoryToEdit['newLimit']) == false) {
-           return "Kwota limimu musi być liczbą. Separatorem jest kropka '.'"; 
+           return "Kwota limimu musi być liczbą. Separatorem jest kropka"; 
         } else if (floatval($categoryToEdit['newLimit']) > 999999999999.99) {
            return "Kwota limitu może wynosić maksymalnie 999 999 999 999.99"; 
         }    //floatval to funkcja konwertująca string do floata
@@ -303,6 +303,18 @@ class Expenses extends \Core\Model
     
     public static function addExpenseCategory($userId, $ctgName, $ctgLimit)
     {
+        if(Expenses::isCategoryNameUnique($ctgName, $userId) == false) {
+            return "Nazwa kategori już istnieje";
+        }
+        
+        if($ctgLimit != 0) {
+            if(Expenses::isCategoryLimitValidNumber($ctgLimit) == false) {
+               return "Kwota limimu musi być liczbą. Separatorem jest kropka"; 
+            } else if (floatval($ctgLimit) > 999999999999.99) {
+               return "Kwota limitu może wynosić maksymalnie 999 999 999 999.99"; 
+            }
+        }
+        
         $db = static::getDB();
         
         $sql = "INSERT INTO expenses_category_assigned_to_users (user_id, name, monthly_limit)
@@ -313,25 +325,34 @@ class Expenses extends \Core\Model
         $stmt->bindValue(":ctgName", $ctgName, PDO::PARAM_STR);
         $stmt->bindValue(":ctgLimit", $ctgLimit, PDO::PARAM_STR);
         
-        if($stmt->execute()) {
-            
-            $sql = "SELECT id FROM expenses_category_assigned_to_users
-                    WHERE user_id = :userId AND name = :ctgName";
-            
-            $stmt = $db->prepare($sql);
-            $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
-            $stmt->bindValue(":ctgName", $ctgName, PDO::PARAM_STR);
-            
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $stmt->execute();
-            
-            $result = $stmt->fetch();
-            $newCtgId = $result['id'];
-            
-            return $newCtgId;
+        if($stmt->execute()) {            
+            return "success";
+        } else {
+            return "Błąd serwera";
         }
     }
     
+    
+    public static function getNewCategoryId($categoryName, $userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "SELECT id FROM expenses_category_assigned_to_users
+                WHERE user_id = :userId AND name = :ctgName";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgName", $categoryName, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        if($stmt->execute()) {
+            $result = $stmt->fetch();
+            return $result['id']; 
+        } else {
+            return 'Błąd serwera';
+        }
+    }
 
     
 }

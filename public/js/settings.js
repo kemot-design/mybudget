@@ -139,6 +139,8 @@ $(document).ready(function() {
     
     $("#add-exp-ctg").click(function() {
         
+        $("#new-exp-ctg-error").text("");
+        
         $("#new-exp-ctg-modal").modal({
             show: true 
         });
@@ -160,9 +162,11 @@ $(document).ready(function() {
                 name: ctgName,
                 limit: ctgLimit
             },
-            success: function(response) {
-               if (response != "failure") {
-                    
+            success: function(data) {
+                var response = parseInt(data);
+                
+               if (Number.isNaN(response) == false) {
+                                    
                    var newCategoryElement = '<div class="expense-category" id="exp-ctg-item' + response + '"><span id="exp-ctg-name-id' + response + '">' + ctgName + '</span><span class="exp-ctg-delete-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="exp-ctg-edit-btn" id="exp-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
                                     
                     if(ctgLimit != "") {
@@ -173,8 +177,10 @@ $(document).ready(function() {
                    
                    $("#add-exp-ctg").before(newCategoryElement);
                    
+                   $("#new-exp-ctg-modal").modal('hide');
+                   
                 } else {
-                    alert("New category haven't been added");
+                    $("#new-exp-ctg-error").text(data);
                 } 
             }
 
