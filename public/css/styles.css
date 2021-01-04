@@ -269,7 +269,7 @@ tr th:nth-child(1)
 	margin-bottom: 20px;
 }
 
-.formLegend{
+.form-legend{
     font-size: 21px;
     color: darkgreen;
     margin-top: 5px;
@@ -350,33 +350,33 @@ img{
     padding: 8px 0;
 }
 
-.edit-btn:hover {
+.exp-ctg-edit-btn:hover {
     cursor: pointer;
 }
 
-.delete-btn:hover {
+.exp-ctg-delete-btn:hover {
     cursor: pointer;
 }
 
-.expenseCategory {
+.expense-category {
     margin-top: 10px;
 }
 
-.ctgLimit {
+.ctg-limit {
     color: dimgray;
     font-size: 0.9rem;
 }
 
-#addNewExpCtg {
+#add-exp-ctg {
     margin-top: 10px;
     cursor: pointer;
 }
 
-#addNewExpCtg img {
+#add-exp-ctg img {
     margin-bottom: 5px;
 }
 
-.userData {
+.user-data-box {
     margin-top: 20px;
 }
 
@@ -392,6 +392,12 @@ img{
     font-weight: bold;
 }
 
-#profile-edit-err {
+#profile-edit-error {
     color: red;
+    text-align: left;
+}
+
+.modal-errors {
+    color: red;
+    text-align: left;
 }

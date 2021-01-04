@@ -48,16 +48,32 @@ class Settings extends \Core\Controller
     
     public function editExpenseCategory() 
     {
-        $userId = $_POST['userId'];
-        $ctgId = $_POST['ctgId'];
-        $newCtgName = $_POST['newCtgName'];
-        $newLimit = $_POST['newCtgLimit'];
-                
-        if(Expenses::editExpenseCategory($userId, $ctgId, $newCtgName, $newLimit)) {
+        $expCtgToEdit = array(
+            "userId" => $_POST['userId'],
+            "ctgId" => $_POST['ctgId'],
+            "oldCtgName" => $_POST['oldCtgName'],
+            "newCtgName" => $_POST['newCtgName'],
+            "newLimit" => $_POST['newCtgLimit']
+        );
+        
+        
+        //$expCtgToEdit += ['userId', $_POST['userId']];
+        //$$expCtgToEdit += ['ctgId', $_POST['ctgId']];
+        //$$expCtgToEdit['oldCtgName'] = $_POST['oldCtgName'];
+        //$expCtgToEdit['newCtgName'] = $_POST['newCtgName'];
+        //$expCtgToEdit['newLimit'] = $_POST['newCtgLimit'];
+        
+        $editingResponse = Expenses::editExpenseCategory($expCtgToEdit);
+         
+        if($editingResponse == "Ok") {
             echo "success";
+        } else if($editingResponse == "Name uniqness fail"){
+            echo "Taka kategoria już istnieje";
+        } else if($editingResponse == "DB fail"){
+            echo "Awaria bazy danych, przepraszamy";
         } else {
-            echo "failure";
-        }   
+            echo "Nieznany błąd, przepraszamy";
+        }
     }
     
     public function deleteExpenseCategory() {

@@ -57,20 +57,20 @@
                         
                         {% for category in expenseCategories %}
                           
-                            <div class="expenseCategory" id="expenseCtgItem{{ category.id }}">
+                            <div class="expense-category" id="exp-ctg-item{{ category.id }}">
                                 
-                                <span id="ctgId{{ category.id }}">{{ category.name }}</span>
+                                <span id="exp-ctg-name-id{{ category.id }}">{{ category.name }}</span>
                                 
-                                <span class="delete-btn" data-category-id="{{ category.id }}">
+                                <span class="exp-ctg-delete-btn" data-category-id="{{ category.id }}">
                                     <img src="/img/clear.png" class="float-right ml-2"/>
                                 </span>
                                 
-                                <span class="edit-btn" id="editBtnCtg{{ category.id }}" data-category-id="{{ category.id }}">
+                                <span class="exp-ctg-edit-btn" id="exp-ctg-edit-id{{ category.id }}" data-category-id="{{ category.id }}">
                                     <img src="/img/edit2.png" class="float-right"/>
                                 </span>
                                 
                                 {% if category.monthly_limit > 0 %}
-                                    <div class='ctgLimit'> Limit: <span id="ctgLimit{{category.id}}">{{ category.monthly_limit }}</span></div>
+                                    <div class='ctg-limit'> Limit: <span id="ctg-limit{{category.id}}">{{ category.monthly_limit }}</span></div>
                                 {% endif %}
                                 
                                 <hr class="line"/>
@@ -81,13 +81,13 @@
 
                         {% endfor %}  
                           
-                        <div id="addNewExpCtg">
+                        <div id="add-exp-ctg">
                             <img src="/img/add.png">
                             Dodaj nową kategorię
                         </div>
                                 
-                        <!-- Edit Modal -->
-                        <div id="edit-category-modal" class="modal fade" role="dialog">
+                        <!-- Edit Expense Category Modal -->
+                        <div id="edit-exp-ctg-modal" class="modal fade" role="dialog">
                           <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">
@@ -98,12 +98,13 @@
                               </div>
                               <div class="modal-body">
 
+                                <div id="exp-ctg-edit-error" class="modal-errors"></div>  
+                                  
                                 <div class="row">
                                     <div class="col-sm-10 offset-sm-1">
-
-                                        <input type="hidden" id="category-id" data-category-id="{{ category.id }}" value="{{ category.id }}">
-                                        <label for="category_name" class="formLegend"> Nazwa kategori </label><br/>
-                                        <input class="form-control category_name_edit" type="text" name="category_name">
+                                        
+                                        <label for="exp-category-name" class="form-legend"> Nazwa kategori </label><br/>
+                                        <input class="form-control exp-ctg-name-edit" type="text" name="exp-category-name">
 
                                     </div>
 
@@ -111,11 +112,13 @@
 
                                 <div class="row">
                                     <div class="col-sm-10 offset-sm-1">
-                                        <input type="checkbox" class="setLimit" id="limitSetEdit">
-                                        <label for="limitSetEdit" class="formLegend"> Ustaw limit dla kategori </label><br/>
+                                        <label class="form-legend">
+                                            <input type="checkbox" id="limit-status">
+                                            Ustaw limit dla kategori
+                                         </label><br/>
 
-                                        <label for="category_limit" class="formLegend"> Miesięczny limit </label><br/>
-                                        <input class="form-control category-limit" id="edit-ctg-limit" type="text" name="category_limit" disabled>
+                                        <label class="form-legend"> Miesięczny limit </label><br/>
+                                        <input class="form-control category-limit" id="edit-exp-ctg-limit" type="text" disabled>
 
                                     </div>
 
@@ -123,9 +126,8 @@
                               </div>
 
                               <div class="modal-footer">
-                                <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
-
-                                  <button type="button" class="btn btn-primary save-btn" data-dismiss="modal">Zapisz zmiany</button>
+                                
+                                  <button type="button" class="btn btn-primary save-exp-ctg-edit-btn">Zapisz zmiany</button>
                               </div>
 
                             </div>
@@ -133,7 +135,7 @@
                         </div>
 
                         <!-- Delete Modal -->
-                        <div id="delete-category-modal" class="modal fade" role="dialog">
+                        <div id="del-exp-ctg-modal" class="modal fade" role="dialog">
                           <div class="modal-dialog">
 
                             <!-- Modal content-->
@@ -147,7 +149,7 @@
                                 <div class="row">
                                     <div class="col-sm-10 offset-sm-1">
 
-                                        <p>Usunąć kategorię <span id="ctgToDel"></span> ?</p>
+                                        <p>Usunąć kategorię <span id="exp-ctg-to-del"></span> ?</p>
 
                                     </div>
 
@@ -156,7 +158,7 @@
 
                               <div class="modal-footer">
                                 <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
-                                 <button id="del-ctg-btn" class="btn btn-primary mt-2" data-dismiss="modal">Usuń</button>
+                                 <button id="del-exp-ctg-btn" class="btn btn-primary mt-2" data-dismiss="modal">Usuń</button>
                                  <button class="btn btn-danger mt-2 cancel-btn" data-dismiss="modal">Anuluj</button>
 
                               </div>
@@ -166,7 +168,7 @@
                         </div>
                           
                         <!-- Add new Modal -->
-                        <div id="new-category-modal" class="modal fade" role="dialog">
+                        <div id="new-exp-ctg-modal" class="modal fade" role="dialog">
                           <div class="modal-dialog">
                             <!-- Modal content-->
                             <div class="modal-content">
@@ -180,8 +182,8 @@
                                 <div class="row">
                                     <div class="col-sm-10 offset-sm-1">
 
-                                        <label for="category_name" class="formLegend"> Nazwa kategori </label><br/>
-                                        <input class="form-control category-name" type="text" name="category_name">
+                                        <label for="new-exp-ctg-name" class="form-legend"> Nazwa kategori </label><br/>
+                                        <input class="form-control" id="new-exp-ctg-name" type="text">
 
                                     </div>
 
@@ -189,11 +191,16 @@
 
                                 <div class="row">
                                     <div class="col-sm-10 offset-sm-1">
-                                        <input type="checkbox" class="setLimit" id="limitSetAdd">
-                                        <label for="limitSetAdd" class="formLegend"> Ustaw limit dla kategori </label><br/>
+                                        
+                                        <label class="form-legend">
+                                            <input type="checkbox" id="new-ctg-limit-status">
+                                            Ustaw limit dla kategori
+                                         </label><br/>
 
-                                        <label for="new-category-limit" class="formLegend"> Miesięczny limit </label><br/>
-                                        <input class="form-control category-limit" id="new-category-limit" type="text" disabled>
+                                        <label class="form-legend"> 
+                                            Miesięczny limit 
+                                            <input class="form-control category-limit" id="new-exp-ctg-limit" type="text" disabled>
+                                        </label><br/>
 
                                     </div>
 
@@ -201,9 +208,8 @@
                               </div>
 
                               <div class="modal-footer">
-                                <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
-
-                                  <button type="button" class="btn btn-primary" id="save-new-ctg-btn" data-dismiss="modal">Dodaj nową kategorię</button>
+                               
+                                  <button type="button" class="btn btn-primary" id="save-new-exp-ctg-btn" data-dismiss="modal">Dodaj nową kategorię</button>
                               </div>
 
                             </div>
@@ -246,7 +252,7 @@
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
                       <div class="card-body">
                         
-                        <div class="userData">
+                        <div class="user-data-box">
                                 
                             Nazwa użytkownika: <span id="user-name" class="user-data">{{ current_user.name}}</span>
 
@@ -254,7 +260,7 @@
                                 
                         </div>     
                           
-                        <div class="userData">
+                        <div class="user-data-box">
                                 
                             Adres email: <span id="user-email" class="user-data">{{ current_user.email}}</span>
 
@@ -262,7 +268,7 @@
                                 
                         </div>     
                             
-                        <div class="userData">
+                        <div class="user-data-box">
                             
                            <span id="user-settings-modal-btn" class="edit-user-profile">
                                 <img src="/img/edit2.png" class="edit-profile-pic"/>
@@ -273,7 +279,7 @@
                                 
                         </div>   
                           
-                        <div class="userData">
+                        <div class="user-data-box">
                             
                             <span id="user-delete-modal-btn" class="edit-user-profile">
                                 <img src="/img/clear.png" class="edit-profile-pic"/>
@@ -306,15 +312,15 @@
                         <div class="row">
                             <div class="col-sm-10 offset-sm-1">
                                 
-                                <div id="profile-edit-err"></div>
+                                <div id="profile-edit-error" class="modal-errors"></div>
 
-                                <label for="user-name-edit" class="formLegend"> Nazwa użytkownika </label><br/>
+                                <label for="user-name-edit" class="form-legend"> Nazwa użytkownika </label><br/>
                                 <input class="form-control" id="user-name-edit" type="text">
                                 
-                                <label for="user-email-edit" class="formLegend mt-3"> Adres email </label><br/>
+                                <label for="user-email-edit" class="form-legend mt-3"> Adres email </label><br/>
                                 <input class="form-control" id="user-email-edit" type="text">
                                 
-                                <label for="user-password-edit" class="formLegend mt-3"> Ustaw nowe hasło </label><br/>
+                                <label for="user-password-edit" class="form-legend mt-3"> Ustaw nowe hasło </label><br/>
                                 <input class="form-control" id="user-password-edit" type="password" placeholder="Zostaw puste aby nie zmieniać">
 
                             </div>

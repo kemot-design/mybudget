@@ -216,8 +216,36 @@ class Expenses extends \Core\Model
 
     }
     
-    public static function editExpenseCategory($userId, $ctgId, $newName, $newLimit) 
+    public static function isNewCategoryNameUnique($newName, $userId)
     {
+        $db = static::getDB();
+        
+        $sql = "SELECT * FROM expenses_category_assigned_to_users
+                WHERE user_id = :userId AND name = :newCategoryName";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":newCategoryName", $newName, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        
+        if($stmt->rowCount() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public static function editExpenseCategory($categoryToEdit) 
+    {
+        if($categoryToEdit['newCtgName'] != $categoryToEdit['oldCtgName']) {
+            $userId = $categoryToEdit['userId'];
+            $newName = $categoryToEdit['newCtgName'];
+            
+            if(Expenses::isNewCategoryNameUnique($newName, $userId) == false) {
+                return "Name uniqness fail";
+            }
+        }
         
         $db = static::getDB();
         
@@ -226,12 +254,16 @@ class Expenses extends \Core\Model
                 WHERE user_id = :userId AND id = :ctgId";
         
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(":newName", $newName, PDO::PARAM_STR);
-        $stmt->bindValue(":newLimit", $newLimit, PDO::PARAM_STR);
-        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
-        $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
+        $stmt->bindValue(":newName", $categoryToEdit['newCtgName'], PDO::PARAM_STR);
+        $stmt->bindValue(":newLimit", $categoryToEdit['newLimit'], PDO::PARAM_STR);
+        $stmt->bindValue(":userId", $categoryToEdit['userId'], PDO::PARAM_INT);
+        $stmt->bindValue(":ctgId", $categoryToEdit['ctgId'], PDO::PARAM_INT);
         
-        return $stmt->execute();
+        if($stmt->execute()) {
+            return "Ok";
+        } else {
+            return "DB fail";
+        }
         
     }
     
@@ -281,5 +313,7 @@ class Expenses extends \Core\Model
             return $newCtgId;
         }
     }
+    
+
     
 }
