@@ -350,15 +350,19 @@ img{
     padding: 8px 0;
 }
 
-.exp-ctg-edit-btn:hover {
+.edit-ctg-btn:hover {
     cursor: pointer;
 }
 
-.exp-ctg-delete-btn:hover {
+.del-ctg-btn:hover {
     cursor: pointer;
 }
 
 .expense-category {
+    margin-top: 10px;
+}
+
+.income-category {
     margin-top: 10px;
 }
 
@@ -367,12 +371,12 @@ img{
     font-size: 0.9rem;
 }
 
-#add-exp-ctg {
+.add-new-ctg {
     margin-top: 10px;
     cursor: pointer;
 }
 
-#add-exp-ctg img {
+.add-new-ctg img {
     margin-bottom: 5px;
 }
 

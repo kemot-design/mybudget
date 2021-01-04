@@ -249,7 +249,10 @@ class Expenses extends \Core\Model
     
     public static function editExpenseCategory($categoryToEdit) 
     {
-        if($categoryToEdit['newCtgName'] != $categoryToEdit['oldCtgName']) {
+        if($categoryToEdit['newCtgName'] == "") {
+            return "Nazwa kategori nie może być pusta";
+        } 
+        else if($categoryToEdit['newCtgName'] != $categoryToEdit['oldCtgName']) {
             $userId = $categoryToEdit['userId'];
             $newName = $categoryToEdit['newCtgName'];
             
@@ -303,7 +306,10 @@ class Expenses extends \Core\Model
     
     public static function addExpenseCategory($userId, $ctgName, $ctgLimit)
     {
-        if(Expenses::isCategoryNameUnique($ctgName, $userId) == false) {
+        if($ctgName == "") {
+            return "Nazwa kategori nie może być pusta";
+        }
+        else if(Expenses::isCategoryNameUnique($ctgName, $userId) == false) {
             return "Nazwa kategori już istnieje";
         }
         

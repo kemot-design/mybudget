@@ -1,30 +1,34 @@
 
 $(document).ready(function() {
     
-    var editingCtgId = "";
-    var editingCtgName = "";
+    var editingExpCtgId = "";
+    var editingExpCtgName = "";
+    
+    var editingIncCtgId = "";
+    var editingIncCtgName = "";
 
-
+// Expenses categories edit
+    
     $('.exp-ctg-edit-btn').on("click", function() {
         
         $("#exp-ctg-edit-error").text("");
         
-        editingCtgId = $(this).data('categoryId');
-        editingCtgName = $('#exp-ctg-name-id' + editingCtgId).text();
+        editingExpCtgId = $(this).data('categoryId');
+        editingExpCtgName = $('#exp-ctg-name-id' + editingExpCtgId).text();
 
         $("#edit-exp-ctg-modal").modal({
             show: true 
         });     
 
-        $('.exp-ctg-name-edit').val(editingCtgName);
+        $('.exp-ctg-name-edit').val(editingExpCtgName);
 
-        if($("#ctg-limit" + editingCtgId).length) {
+        if($("#ctg-limit" + editingExpCtgId).length) {
 
             $("#limit-status").prop("checked", true);
 
             $("#edit-exp-ctg-limit").prop("disabled", false);
 
-            var currentLimit = $("#ctg-limit" + editingCtgId).text();
+            var currentLimit = $("#ctg-limit" + editingExpCtgId).text();
 
             $("#edit-exp-ctg-limit").val(currentLimit);
 
@@ -41,8 +45,8 @@ $(document).ready(function() {
 
     $('.exp-ctg-delete-btn').on("click", function() {
 
-        editingCtgId = $(this).data('categoryId');
-        var ctgName = $("#exp-ctg-name-id" + editingCtgId).html();
+        editingExpCtgId = $(this).data('categoryId');
+        var ctgName = $("#exp-ctg-name-id" + editingExpCtgId).html();
         $("#exp-ctg-to-del").html(ctgName);
 
         $("#del-exp-ctg-modal").modal({
@@ -63,30 +67,30 @@ $(document).ready(function() {
         } 
 
         $.post("/settings/editExpenseCategory", {
-            ctgId: editingCtgId,
-            oldCtgName: editingCtgName,
+            ctgId: editingExpCtgId,
+            oldCtgName: editingExpCtgName,
             newCtgName: newCtgName,
             userId: userId,
             newCtgLimit: newCtgLimit
         }, function(data, status) {
             if(data == "success") {
-                $('#exp-ctg-name-id' + editingCtgId).html(newCtgName);   
+                $('#exp-ctg-name-id' + editingExpCtgId).html(newCtgName);   
                 
                 if($('#limit-status').is(":checked")) {
-                    if($("#ctg-limit" + editingCtgId).length) {
+                    if($("#ctg-limit" + editingExpCtgId).length) {
 
-                        $("#ctg-limit" + editingCtgId).text(newCtgLimit);
+                        $("#ctg-limit" + editingExpCtgId).text(newCtgLimit);
 
                     } else {
-                        var ctgLimit = "<div class='ctg-limit'> Limit: <span id='ctg-limit" + editingCtgId + "'>" + newCtgLimit + "</span></div>";
+                        var ctgLimit = "<div class='ctg-limit'> Limit: <span id='ctg-limit" + editingExpCtgId + "'>" + newCtgLimit + "</span></div>";
 
-                        $("#exp-ctg-edit-id" + editingCtgId).after(ctgLimit);
+                        $("#exp-ctg-edit-id" + editingExpCtgId).after(ctgLimit);
                     }
                 } else {
                     
-                    if($("#ctg-limit" + editingCtgId).length) {
+                    if($("#ctg-limit" + editingExpCtgId).length) {
                             
-                        $("#ctg-limit" + editingCtgId).parent().remove();   
+                        $("#ctg-limit" + editingExpCtgId).parent().remove();   
                     }
                 }
                 
@@ -105,10 +109,10 @@ $(document).ready(function() {
         $.ajax({
             type: "POST",
             url: "http://localhost/settings/deleteExpenseCategory",
-            data: { ctgId: editingCtgId, userId: userId},
+            data: { ctgId: editingExpCtgId, userId: userId},
             success: function(response) {
                 if (response == "success") {
-                    $("#exp-ctg-item" + editingCtgId).remove();
+                    $("#exp-ctg-item" + editingExpCtgId).remove();
                 } else {
                     alert("Category havent been deleted, sorry");
                 }
@@ -167,7 +171,7 @@ $(document).ready(function() {
                 
                if (Number.isNaN(response) == false) {
                                     
-                   var newCategoryElement = '<div class="expense-category" id="exp-ctg-item' + response + '"><span id="exp-ctg-name-id' + response + '">' + ctgName + '</span><span class="exp-ctg-delete-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="exp-ctg-edit-btn" id="exp-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
+                   var newCategoryElement = '<div class="expense-category" id="exp-ctg-item' + response + '"><span id="exp-ctg-name-id' + response + '">' + ctgName + '</span><span class="exp-ctg-delete-btn del-ctg-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="exp-ctg-edit-btn edit-ctg-btn" id="exp-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
                                     
                     if(ctgLimit != "") {
                         newCategoryElement = newCategoryElement + '<div class="ctg-limit"> Limit: <span id="ctg-limit' + response + '">' + ctgLimit + '</span></div>';
@@ -250,7 +254,119 @@ $(document).ready(function() {
     $("#user-delete-btn").click(function(){
         window.location.href = "/settings/deleteUser";
     });
+    
+// Income categories editinh
+    
+    $('.inc-ctg-edit-btn').on("click", function() {
+        
+        $("#inc-ctg-edit-error").text("");
+        
+        editingIncCtgId = $(this).data('categoryId');
+        editingIncCtgName = $('#inc-ctg-name-id' + editingIncCtgId).text();
+
+        $("#edit-inc-ctg-modal").modal({
+            show: true 
+        });     
+
+        $('.inc-ctg-name-edit').val(editingIncCtgName);
+
+    }); 
+    
+    $(".save-inc-ctg-edit-btn").click( function() {
+
+        var newCtgName = $(".inc-ctg-name-edit").val();
+
+        $.post("/settings/editIncomeCategory", {
+            ctgId: editingIncCtgId,
+            oldCtgName: editingIncCtgName,
+            newCtgName: newCtgName,
+            userId: userId
+        }, function(data, status) {
+            if(data == "success") {
+                $('#inc-ctg-name-id' + editingIncCtgId).html(newCtgName);   
+                                
+                $("#edit-inc-ctg-modal").modal('hide');
+                
+                $("#inc-ctg-edit-error").text("");
+                
+            } else {
+                $("#inc-ctg-edit-error").text(data);
+            }
+        });
+    }); 
+    
+    
+    $('.inc-ctg-delete-btn').on("click", function() {
+
+        editingIncCtgId = $(this).data('categoryId');
+        var ctgName = $("#inc-ctg-name-id" + editingIncCtgId).html();
+        $("#inc-ctg-to-del").html(ctgName);
+
+        $("#del-inc-ctg-modal").modal({
+            show: true 
+        }); 
+    })    
+    
+    $("#confirm-inc-ctg-del-btn").click(function(){
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/settings/deleteIncomeCategory",
+            data: { ctgId: editingIncCtgId, userId: userId},
+            success: function(response) {
+                if (response == "success") {
+                    $("#inc-ctg-item" + editingIncCtgId).remove();
+                } else {
+                    alert("Wystąpił błąd, przepraszamy");
+                }
+            }
+        });  
+    });
      
+    $("#add-inc-ctg").click(function() {
+        
+        $("#new-inc-ctg-error").text("");
+        
+        $("#new-inc-ctg-modal").modal({
+            show: true 
+        });
+        
+        $('#new-inc-ctg-name').val('');
+        $('#new-inc-ctg-limit').val('');
+    });   
+    
+    $("#save-new-inc-ctg-btn").click(function(){
+
+        var ctgName = $("#new-inc-ctg-name").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/settings/addIncomeCategory",
+            data: {
+                name: ctgName
+            },
+            success: function(data) {
+                var response = parseInt(data);
+
+               if(Number.isNaN(response) == false) {
+                                    
+                   var newCategoryElement = '<div class="income-category" id="inc-ctg-item' + response + '"><span id="inc-ctg-name-id' + response + '">' + ctgName + '</span><span class="inc-ctg-delete-btn edit-ctg-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="inc-ctg-edit-btn del-ctg-btn" id="inc-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
+                                    
+                   newCategoryElement = newCategoryElement + '<hr class="line"/></div>';
+                   
+                   $("#add-inc-ctg").before(newCategoryElement);
+                   
+                   $("#new-inc-ctg-modal").modal('hide');
+                   
+                } else {
+                    $("#new-inc-ctg-error").text(data);
+                } 
+            }
+
+        });   
+
+    });    
+    
 });
 
 

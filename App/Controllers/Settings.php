@@ -5,6 +5,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Auth;
 use \App\Models\Expenses;
+use \App\Models\Incomes;
 use \App\Flash;
 use \App\Models\User;
 
@@ -39,14 +40,16 @@ class Settings extends \Core\Controller
         
         $userDefinedPaymentMethods = Expenses::getUserDefinedPaymentMethods($userId);
         $userDefinedExpenseCategories = Expenses::getUserAssignedCategories($userId); 
+        $userDefinedIncomeCategories = Incomes::getUserAssignedCategories($userId); 
         
         View::renderTemplate('Settings/show.html',[
             'paymentMethods' => $userDefinedPaymentMethods,
-            'expenseCategories' => $userDefinedExpenseCategories
+            'expenseCategories' => $userDefinedExpenseCategories,
+            'incomeCategories' => $userDefinedIncomeCategories
         ]);
     }
     
-    public function editExpenseCategory() 
+    public function editExpenseCategoryAction() 
     {
         $expCtgToEdit = array(
             "userId" => $_POST['userId'],
@@ -56,20 +59,13 @@ class Settings extends \Core\Controller
             "newLimit" => $_POST['newCtgLimit']
         );
         
-        
-        //$expCtgToEdit += ['userId', $_POST['userId']];
-        //$$expCtgToEdit += ['ctgId', $_POST['ctgId']];
-        //$$expCtgToEdit['oldCtgName'] = $_POST['oldCtgName'];
-        //$expCtgToEdit['newCtgName'] = $_POST['newCtgName'];
-        //$expCtgToEdit['newLimit'] = $_POST['newCtgLimit'];
-        
         $editingResponse = Expenses::editExpenseCategory($expCtgToEdit);
         
         echo $editingResponse;
          
     }
     
-    public function deleteExpenseCategory() {
+    public function deleteExpenseCategoryAction() {
         $userId = $_POST['userId'];
         $ctgId = $_POST['ctgId'];
         
@@ -80,7 +76,7 @@ class Settings extends \Core\Controller
         }
     }
     
-    public function addExpenseCategory()
+    public function addExpenseCategoryAction()
     {
         $this->user = Auth::getUser();
         $userId = $this->user->id;
@@ -98,7 +94,7 @@ class Settings extends \Core\Controller
         
     }
     
-    public function updateUserData()
+    public function updateUserDataAction()
     {
         $user = Auth::getUser();
     
@@ -111,7 +107,7 @@ class Settings extends \Core\Controller
         }
     }
     
-    public function deleteUser()
+    public function deleteUserAction()
     {
         $user = Auth::getUser();
         $user->deleteUser();
@@ -127,6 +123,49 @@ class Settings extends \Core\Controller
 
         $this->redirect('/');
     }
+    
+    public function editIncomeCategoryAction() 
+    {
+        $incCtgToEdit = array(
+            "userId" => $_POST['userId'],
+            "ctgId" => $_POST['ctgId'],
+            "oldCtgName" => $_POST['oldCtgName'],
+            "newCtgName" => $_POST['newCtgName']
+        );
+        
+        $editingResponse = Incomes::editCategory($incCtgToEdit);
+        
+        echo $editingResponse;
+         
+    }    
+    
+    public function deleteIncomeCategoryAction() {
+        $userId = $_POST['userId'];
+        $ctgId = $_POST['ctgId'];
+        
+        if(Incomes::deleteCategory($userId, $ctgId)) {
+            echo "success";
+        } else {
+            echo "failure";
+        }
+    }    
+    
+    public function addIncomeCategoryAction()
+    {
+        $this->user = Auth::getUser();
+        $userId = $this->user->id;
+        
+        $ctgName = $_POST['name'];
+        
+        $addNewCategoryResponse = Incomes::addNewCategory($userId, $ctgName);
+        
+        if($addNewCategoryResponse == "success") {
+            echo Incomes::getNewCategoryId($ctgName, $userId);
+        } else {
+            echo $addNewCategoryResponse;
+        }
+        
+    }    
     
 }
 
