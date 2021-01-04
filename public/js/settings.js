@@ -7,6 +7,8 @@ $(document).ready(function() {
 
     $('.exp-ctg-edit-btn').on("click", function() {
         
+        $("#exp-ctg-edit-error").text("");
+        
         editingCtgId = $(this).data('categoryId');
         editingCtgName = $('#exp-ctg-name-id' + editingCtgId).text();
 
@@ -89,6 +91,7 @@ $(document).ready(function() {
                 }
                 
                 $("#edit-exp-ctg-modal").modal('hide');
+                $("#exp-ctg-edit-error").text("");
                 
             } else {
                 $("#exp-ctg-edit-error").text(data);

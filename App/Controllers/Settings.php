@@ -64,16 +64,9 @@ class Settings extends \Core\Controller
         //$expCtgToEdit['newLimit'] = $_POST['newCtgLimit'];
         
         $editingResponse = Expenses::editExpenseCategory($expCtgToEdit);
+        
+        echo $editingResponse;
          
-        if($editingResponse == "Ok") {
-            echo "success";
-        } else if($editingResponse == "Name uniqness fail"){
-            echo "Taka kategoria już istnieje";
-        } else if($editingResponse == "DB fail"){
-            echo "Awaria bazy danych, przepraszamy";
-        } else {
-            echo "Nieznany błąd, przepraszamy";
-        }
     }
     
     public function deleteExpenseCategory() {

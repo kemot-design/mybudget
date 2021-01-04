@@ -236,6 +236,17 @@ class Expenses extends \Core\Model
         }
     }
     
+    public static function isCategoryLimitValidNumber($categoryLimit)
+    {
+        
+        if(preg_match("/^(\d*\.)?\d+$/", $categoryLimit) == 0) {
+            return false;
+        } else {
+            return true;
+        }
+        
+    }
+    
     public static function editExpenseCategory($categoryToEdit) 
     {
         if($categoryToEdit['newCtgName'] != $categoryToEdit['oldCtgName']) {
@@ -243,9 +254,16 @@ class Expenses extends \Core\Model
             $newName = $categoryToEdit['newCtgName'];
             
             if(Expenses::isNewCategoryNameUnique($newName, $userId) == false) {
-                return "Name uniqness fail";
+                return "Nazwa kategori już istnieje";
             }
         }
+        
+        if(Expenses::isCategoryLimitValidNumber($categoryToEdit['newLimit']) == false) {
+           return "Kwota limimu musi być liczbą. Separatorem jest kropka '.'"; 
+        } else if (floatval($categoryToEdit['newLimit']) > 999999999999.99) {
+           return "Kwota limitu może wynosić maksymalnie 999 999 999 999.99"; 
+        }    //floatval to funkcja konwertująca string do floata
+        
         
         $db = static::getDB();
         
@@ -260,9 +278,9 @@ class Expenses extends \Core\Model
         $stmt->bindValue(":ctgId", $categoryToEdit['ctgId'], PDO::PARAM_INT);
         
         if($stmt->execute()) {
-            return "Ok";
+            return "success";
         } else {
-            return "DB fail";
+            return "Błąd serwera, przepraszamy";
         }
         
     }
