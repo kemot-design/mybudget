@@ -510,9 +510,9 @@ class Expenses extends \Core\Model
     public static function getCurrentMonthExpensesSum($userId, $categoryId)
     {
         
-        $sql = "SELECT SUM(amount) AS expensesSum 
+        $sql = "SELECT COALESCE(SUM(amount),0) expensesSum 
         FROM expenses 
-        WHERE user_id = :userIdd AND id = :categoryId AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY";
+        WHERE user_id = :userIdd AND expense_category_assigned_to_user_id = :categoryId AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY";
         
         $db = static::getDB();
         

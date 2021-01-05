@@ -403,7 +403,18 @@ img{
 }
 
 #category-limit {
-    border: 2px solid green;
-    border-radius: 5px;
     font-size: 14px;
+    display: none;
+}
+
+.limit-below-zero {
+    border: 3px solid red;
+    border-radius: 8px;
+    background-color: lightcoral;
+}
+
+.limit-above-zero {
+    border: 3px solid green;
+    border-radius: 8px;
+    background-color: lightgreen;
 }

@@ -91,8 +91,7 @@ class Expense extends Authenticated
         
         $expensesSum = Expenses::getCurrentMonthExpensesSum($userId, $categoryId);
         
-        
-        $expensesSum = ($expensesSum == NULL ? 0 : $expensesSum);
+        //$expensesSum = ($expensesSum == NULL ? 0 : $expensesSum);
         
         echo $expensesSum;
     }
