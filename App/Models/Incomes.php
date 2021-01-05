@@ -181,4 +181,135 @@ class Incomes extends \Core\Model
 
     }
     
+    public static function isCategoryNameUnique($newName, $userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "SELECT * FROM incomes_category_assigned_to_users
+                WHERE user_id = :userId AND name = :newCategoryName";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":newCategoryName", $newName, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        
+        if($stmt->rowCount() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }    
+    
+    public static function editCategory($categoryToEdit) 
+    {
+        if($categoryToEdit['newCtgName'] == "") {
+            return "Nazwa kategori nie może być pusta";
+        } 
+        else if($categoryToEdit['newCtgName'] != $categoryToEdit['oldCtgName']) 
+        {
+            $userId = $categoryToEdit['userId'];
+            $newName = $categoryToEdit['newCtgName'];
+            
+            if(Incomes::isCategoryNameUnique($newName, $userId) == false) 
+            {
+                return "Nazwa kategori już istnieje";
+            }
+        }   
+        
+        $db = static::getDB();
+        
+        $sql = "UPDATE incomes_category_assigned_to_users
+                SET name = :newName
+                WHERE user_id = :userId AND id = :ctgId";
+        
+        $stmt = $db->prepare($sql);
+        
+        $stmt->bindValue(":newName", $categoryToEdit['newCtgName'], PDO::PARAM_STR);
+        $stmt->bindValue(":userId", $categoryToEdit['userId'], PDO::PARAM_INT);
+        $stmt->bindValue(":ctgId", $categoryToEdit['ctgId'], PDO::PARAM_INT);
+        
+        if($stmt->execute()) {
+            return "success";
+        } else {
+            return "Błąd serwera, przepraszamy";
+        }
+    }    
+    
+    public static function deleteCategory($userId, $ctgId) 
+    {
+        
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM incomes_category_assigned_to_users
+                WHERE user_id= :userId AND id = :ctgId";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgId", $ctgId, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+        
+    }    
+    
+    public static function addNewCategory($userId, $ctgName)
+    {
+        if($ctgName == "") {
+            return "Nazwa kategorie nie może być pusta";
+        }
+        else if(Incomes::isCategoryNameUnique($ctgName, $userId) == false) {
+            return "Nazwa kategori już istnieje";
+        }
+        
+        $db = static::getDB();
+        
+        $sql = "INSERT INTO incomes_category_assigned_to_users (user_id, name)
+                VALUES(:userId, :ctgName)";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgName", $ctgName, PDO::PARAM_STR);
+        
+        if($stmt->execute()) {            
+            return "success";
+        } else {
+            return "Błąd serwera";
+        }
+    }
+    
+    
+    public static function getNewCategoryId($categoryName, $userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "SELECT id FROM incomes_category_assigned_to_users
+                WHERE user_id = :userId AND name = :ctgName";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":ctgName", $categoryName, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        if($stmt->execute()) {
+            $result = $stmt->fetch();
+            return $result['id']; 
+        } else {
+            return 'Błąd serwera';
+        }
+    }    
+    
+    public static function deleteAllUserIncomes($userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM incomes
+                WHERE user_id = :userId";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        
+        return $stmt->execute();        
+    }
+    
 }

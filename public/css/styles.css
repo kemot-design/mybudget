@@ -269,7 +269,7 @@ tr th:nth-child(1)
 	margin-bottom: 20px;
 }
 
-.formLegend{
+.form-legend{
     font-size: 21px;
     color: darkgreen;
     margin-top: 5px;
@@ -319,4 +319,102 @@ img{
 }
 .alert-warning {
     background-color: #fcf8e3;
+}
+
+.card {
+	background-color: #dedede;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .5rem;
+}
+
+.card-header {
+    padding: 0;
+    text-align: left;
+}
+
+.btn-block {
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
+.card-body {
+    text-align: left;
+}
+
+.line {
+    margin: 10px 0 0 0;
+}
+
+.settingsItem {
+    font-size: 16px;
+    padding: 8px 0;
+}
+
+.edit-ctg-btn:hover {
+    cursor: pointer;
+}
+
+.del-ctg-btn:hover {
+    cursor: pointer;
+}
+
+.accordion-list-item {
+   margin-top: 10px; 
+}
+
+.ctg-limit {
+    color: dimgray;
+    font-size: 0.9rem;
+}
+
+.add-new-ctg {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.add-new-ctg img {
+    margin-bottom: 5px;
+}
+
+.user-data-box {
+    margin-top: 20px;
+}
+
+.edit-profile-pic {
+    margin-bottom: 10px;
+}
+
+.edit-user-profile:hover {
+    cursor: pointer;
+}
+
+.user-data {
+    font-weight: bold;
+}
+
+#profile-edit-error {
+    color: red;
+    text-align: left;
+}
+
+.modal-errors {
+    color: red;
+    text-align: left;
+}
+
+#category-limit {
+    font-size: 14px;
+    display: none;
+}
+
+.limit-below-zero {
+    border: 3px solid red;
+    border-radius: 8px;
+    background-color: lightcoral;
+}
+
+.limit-above-zero {
+    border: 3px solid green;
+    border-radius: 8px;
+    background-color: lightgreen;
 }

@@ -67,5 +67,33 @@ class Expense extends Authenticated
         }
     }
 
+    public function checkCategoryLimitAction()
+    {
+        $userId = $this->user->id;
+        
+        $categoryLimit = Expenses::getCategoryLimit($_POST['categoryId'], $userId);
+        
+        if(is_numeric($categoryLimit)) {
+            if($categoryLimit == 0) {
+                echo "No limit";
+            } else {
+                echo $categoryLimit;
+            }
+        } else {
+            echo "Serwer error";
+        }
+    }
+    
+    public function getCurrentMonthCategoryExpensesAction()
+    {
+        $userId = $this->user->id;
+        $categoryId = $_POST['categoryId'];
+        
+        $expensesSum = Expenses::getCurrentMonthExpensesSum($userId, $categoryId);
+        
+        //$expensesSum = ($expensesSum == NULL ? 0 : $expensesSum);
+        
+        echo $expensesSum;
+    }
 
 }
