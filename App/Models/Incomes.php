@@ -299,4 +299,17 @@ class Incomes extends \Core\Model
         }
     }    
     
+    public static function deleteAllUserIncomes($userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM incomes
+                WHERE user_id = :userId";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        
+        return $stmt->execute();        
+    }
+    
 }

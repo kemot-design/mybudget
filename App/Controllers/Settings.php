@@ -211,6 +211,22 @@ class Settings extends \Core\Controller
         
     }        
     
+    public function deleteIncomesAndExpensesAction()
+    {
+        $this->user = Auth::getUser();
+        $userId = $this->user->id;
+        
+        $expensesDelResponse = Expenses::deleteAllUserExpenses($userId);
+        
+        $incomesDelResponse = Incomes::deleteAllUserIncomes($userId);
+        
+        if($expensesDelResponse && $incomesDelResponse) {
+            return "success";
+        } else {
+            return "Błąd serwera, przepraszamy";
+        }
+    }
+    
 }
 
 

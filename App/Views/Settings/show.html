@@ -545,6 +545,17 @@
                           
                         <div class="user-data-box">
                             
+                            <span id="del-exp-inc-modal-btn" class="edit-user-profile">
+                                <img src="/img/delete.png" class="edit-profile-pic"/>
+                                Usuń wszystkie wydatki i przychody
+                            </span>
+                            
+                            <hr class="line"/>
+                                
+                        </div>                             
+                          
+                        <div class="user-data-box">
+                            
                             <span id="user-delete-modal-btn" class="edit-user-profile">
                                 <img src="/img/clear.png" class="edit-profile-pic"/>
                                 Usuń konto
@@ -635,6 +646,41 @@
 
                   </div>
                 </div>
+                
+                <!-- All expenses and incomes delete Modal -->
+                <div id="exp-inc-del-modal" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title text-center">Usunięcie wpływów i wydatków</h4>
+                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                      </div>
+                      <div class="modal-body">
+                          
+                        <div id="exp-inc-del-errors"></div>
+
+                        <div class="row">
+                            <div class="col-sm-10 offset-sm-1">
+
+                                <p>Usunąć wszystkie wprowadzone wpływy i wydatki?</p>
+                                <br/>
+                                <p>Jest to operacja nieodwracalna</p>
+
+                            </div>
+
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+                         <button id="exp-inc-del-confirm-btn" class="btn btn-primary mt-2" data-dismiss="modal">Usuń</button>
+                         <button class="btn btn-danger mt-2 cancel-btn" data-dismiss="modal">Anuluj</button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>                
 
                 
             </div>

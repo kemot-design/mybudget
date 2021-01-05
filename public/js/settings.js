@@ -477,6 +477,32 @@ $(document).ready(function() {
 
     });       
     
+    $("#del-exp-inc-modal-btn").click( function(){
+        
+        $("#exp-inc-del-modal").modal('show');
+        
+    });
+    
+    $("#exp-inc-del-confirm-btn").click(function(){
+        
+        var userId = userId;
+        
+        $.ajax({
+            type: "POST",
+            url: "/settings/deleteIncomesAndExpenses",
+            data: {userId: userId},
+            success: function(response) {
+                if(response == "success") {
+                    $("#exp-inc-del-modal").modal('hide');
+                } else {
+                   $("#exp-inc-del-errors").text(response); 
+                }
+            }
+        });
+        
+        
+    });
+                                      
 });
 
 

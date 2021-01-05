@@ -473,4 +473,62 @@ class Expenses extends \Core\Model
         }
     }      
     
+    public static function deleteAllUserExpenses($userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM expenses
+                WHERE user_id = :userId";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+    }
+    
+    public static function getCategoryLimit($categoryId, $userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "SELECT monthly_limit FROM expenses_category_assigned_to_users
+                WHERE user_id = :userId AND id = :categoryId";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":categoryId", $categoryId, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        if($stmt->execute()) {
+            $result = $stmt->fetch();
+            return $result['monthly_limit']; 
+        } else {
+            return 'Serwer error';
+        }
+    }
+    
+    public static function getCurrentMonthExpensesSum($userId, $categoryId)
+    {
+        
+        $sql = "SELECT SUM(amount) AS expensesSum 
+        FROM expenses 
+        WHERE user_id = :userIdd AND id = :categoryId AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY";
+        
+        $db = static::getDB();
+        
+        $stmt = $db->prepare($sql);
+        
+        $stmt->bindValue(":userIdd", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":categoryId", $categoryId, PDO::PARAM_INT);
+        
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        if($stmt->execute()) {
+            $result = $stmt->fetch();
+            return $result['expensesSum']; 
+        } else {
+            return 'Serwer error';
+        }
+    }
+    
 }

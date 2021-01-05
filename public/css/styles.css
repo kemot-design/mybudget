@@ -401,3 +401,9 @@ img{
     color: red;
     text-align: left;
 }
+
+#category-limit {
+    border: 2px solid green;
+    border-radius: 5px;
+    font-size: 14px;
+}

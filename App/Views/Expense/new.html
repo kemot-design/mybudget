@@ -4,7 +4,7 @@
 
 {% block footer %}
 
-    <script src="/js/app.js"></script>
+    <script src="/js/expenses.js"></script>
 
     <script>
         
@@ -105,7 +105,19 @@
 
                     <h2 class="content-header"><i class="icon-basket-1"></i> Dodaj wydatek </h2>
 
-                </header>     
+                </header>
+                
+                <div id="category-limit" class="col-sm-10 offset-sm-1 mb-3 text-left">
+                    <div class="row">
+                        <div class="col-sm-2">Miesięczny limit<br/><span id="limit-value">1.23</span></div>
+                        <div class="col-sm-2 offset-sm-1">Poprzednie wydatki<br/><span id="existing-expenses">1.23</span></div>
+                        <div class="col-sm-2 offset-sm-1">Wydatek<br/><span  id="expense-value">1.23</span></div>
+                        <div class="col-sm-2 offset-sm-1">Pozostały limit<br/><span id="limit-minus-expense">1.23</span></div>
+                    </div>
+                    <div class="row pl-3">
+                        Możesz jeszcze wydać na Ubrania 600zł w tym miesiącu
+                    </div>
+                </div>
 
                 <form action="/Expense/create" method="POST" id="formExpense">
 
@@ -154,7 +166,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label for="expense_category" class="formLegend">Kategoria</label><br/>
-                            <select class="custom-select mr-sm-2" name="expense_category" required>
+                            <select class="custom-select mr-sm-2" id="expense-category" name="expense_category" required>
                                 <option value="0" selected disabled>Wybierz kategorię...</option>
                                 
                                 {% for category in expenseCategories %}
