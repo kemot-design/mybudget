@@ -6,6 +6,9 @@ $(document).ready(function() {
     
     var editingIncCtgId = "";
     var editingIncCtgName = "";
+    
+    var editingPayMethodId = "";
+    var editingPayMethodName = "";
 
 // Expenses categories edit
     
@@ -171,7 +174,7 @@ $(document).ready(function() {
                 
                if (Number.isNaN(response) == false) {
                                     
-                   var newCategoryElement = '<div class="expense-category" id="exp-ctg-item' + response + '"><span id="exp-ctg-name-id' + response + '">' + ctgName + '</span><span class="exp-ctg-delete-btn del-ctg-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="exp-ctg-edit-btn edit-ctg-btn" id="exp-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
+                   var newCategoryElement = '<div class="accordion-list-item" id="exp-ctg-item' + response + '"><span id="exp-ctg-name-id' + response + '">' + ctgName + '</span><span class="exp-ctg-delete-btn del-ctg-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="exp-ctg-edit-btn edit-ctg-btn" id="exp-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
                                     
                     if(ctgLimit != "") {
                         newCategoryElement = newCategoryElement + '<div class="ctg-limit"> Limit: <span id="ctg-limit' + response + '">' + ctgLimit + '</span></div>';
@@ -255,7 +258,7 @@ $(document).ready(function() {
         window.location.href = "/settings/deleteUser";
     });
     
-// Income categories editinh
+// Income categories edit
     
     $('.inc-ctg-edit-btn').on("click", function() {
         
@@ -350,7 +353,7 @@ $(document).ready(function() {
 
                if(Number.isNaN(response) == false) {
                                     
-                   var newCategoryElement = '<div class="income-category" id="inc-ctg-item' + response + '"><span id="inc-ctg-name-id' + response + '">' + ctgName + '</span><span class="inc-ctg-delete-btn edit-ctg-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="inc-ctg-edit-btn del-ctg-btn" id="inc-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
+                   var newCategoryElement = '<div class="accordion-list-item" id="inc-ctg-item' + response + '"><span id="inc-ctg-name-id' + response + '">' + ctgName + '</span><span class="inc-ctg-delete-btn edit-ctg-btn" data-category-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="inc-ctg-edit-btn del-ctg-btn" id="inc-ctg-edit-id' + response + '" data-category-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
                                     
                    newCategoryElement = newCategoryElement + '<hr class="line"/></div>';
                    
@@ -366,6 +369,113 @@ $(document).ready(function() {
         });   
 
     });    
+    
+// Payment Methods edit
+    
+    $('.pay-method-edit-btn').on("click", function() {
+        
+        $("#pay-method-edit-error").text("");
+        
+        editingPayMethodId = $(this).data('methodId');
+        editingPayMethodName = $('#pay-method-name-id' + editingPayMethodId).text();
+
+        $("#edit-pay-method-modal").modal({
+            show: true 
+        });     
+
+        $('#pay-method-name-edit').val(editingPayMethodName);
+
+    });   
+    
+    $("#save-pay-method-edit-btn").click( function() {
+
+        var newMethodName = $("#pay-method-name-edit").val();
+
+        $.post("/settings/editPaymentMethod", {
+            methodId: editingPayMethodId,
+            oldMethodName: editingPayMethodName,
+            newMethodName: newMethodName,
+            userId: userId
+        }, function(data, status) {
+            if(data == "success") {
+                $('#pay-method-name-id' + editingPayMethodId).html(newMethodName);   
+                                
+                $("#edit-pay-method-modal").modal('hide');
+                
+            } else {
+                $("#pay-method-edit-error").text(data);
+            }
+        });
+    });     
+    
+    $('.pay-method-delete-btn').on("click", function() {
+
+        editingPayMethodId = $(this).data('methodId');
+        var methodName = $("#pay-method-name-id" + editingPayMethodId).html();
+        $("#pay-method-to-del").text(methodName);
+
+        $("#del-pay-method-modal").modal({
+            show: true 
+        }); 
+    })       
+    
+    $("#confirm-pay-method-del-btn").click(function(){
+
+        $.ajax({
+            type: "POST",
+            url: "/settings/deletePaymentMethod",
+            data: { methodId: editingPayMethodId, userId: userId},
+            success: function(response) {
+                if (response == "success") {
+                    $("#pay-method-item" + editingPayMethodId).remove();
+                } else {
+                    alert("Wystąpił błąd, przepraszamy");
+                }
+            }
+        });  
+    });    
+     
+    $("#add-pay-method").click(function() {
+        
+        $("#new-pay-method-error").text("");
+        
+        $("#new-pay-method-modal").modal('show');
+        
+        $('#new-pay-method-name').val('');
+
+    });    
+    
+    $("#save-new-pay-method-btn").click(function(){
+
+        var methodName = $("#new-pay-method-name").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/settings/addPaymentMethod",
+            data: {
+                name: methodName
+            },
+            success: function(data) {
+                var response = parseInt(data);  //if response from ajax is an int, that means mathod was added and its id is returned here
+
+               if(Number.isNaN(response) == false) {
+                                    
+                   var newMethodElement = '<div class="accordion-list-item" id="pay-method-item' + response + '"><span id="pay-method-name-id' + response + '">' + methodName + '</span><span class="pay-method-delete-btn del-ctg-btn" data-method-id="' + response + '"><img src="/img/clear.png" class="float-right ml-2"/></span><span class="pay-method-edit-btn edit-ctg-btn" data-method-id="' + response + '"><img src="/img/edit2.png" class="float-right"/></span>';
+                                    
+                   newMethodElement += '<hr class="line"/></div>';
+                   
+                   $("#add-pay-method").before(newMethodElement);
+                   
+                   $("#new-pay-method-modal").modal('hide');
+                   
+                } else {
+                    $("#new-pay-method-error").text(data);
+                } 
+            }
+
+        });   
+
+    });       
     
 });
 

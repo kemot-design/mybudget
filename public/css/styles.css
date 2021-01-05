@@ -358,12 +358,8 @@ img{
     cursor: pointer;
 }
 
-.expense-category {
-    margin-top: 10px;
-}
-
-.income-category {
-    margin-top: 10px;
+.accordion-list-item {
+   margin-top: 10px; 
 }
 
 .ctg-limit {

@@ -37,15 +37,15 @@ class Settings extends \Core\Controller
     public function showAction()
     {
         $userId = $this->user->id;
-        
-        $userDefinedPaymentMethods = Expenses::getUserDefinedPaymentMethods($userId);
-        $userDefinedExpenseCategories = Expenses::getUserAssignedCategories($userId); 
+         
         $userDefinedIncomeCategories = Incomes::getUserAssignedCategories($userId); 
+        $userDefinedExpenseCategories = Expenses::getUserAssignedCategories($userId);
+        $userDefinedPaymentMethods = Expenses::getUserDefinedPaymentMethods($userId);
         
         View::renderTemplate('Settings/show.html',[
+            'incomeCategories' => $userDefinedIncomeCategories,
             'paymentMethods' => $userDefinedPaymentMethods,
-            'expenseCategories' => $userDefinedExpenseCategories,
-            'incomeCategories' => $userDefinedIncomeCategories
+            'expenseCategories' => $userDefinedExpenseCategories
         ]);
     }
     
@@ -166,6 +166,50 @@ class Settings extends \Core\Controller
         }
         
     }    
+    
+    public function editPaymentMethodAction() 
+    {
+        $methodToEdit = array(
+            
+            "methodId" => $_POST['methodId'],
+            "oldMethodName" => $_POST['oldMethodName'],
+            "newMethodName" => $_POST['newMethodName'],
+            "userId" => $_POST['userId']
+        );
+        
+        $editingResponse = Expenses::editPaymentMethod($methodToEdit);
+        
+        echo $editingResponse;
+         
+    }     
+    
+    public function deletePaymentMethodAction() {
+        $userId = $_POST['userId'];
+        $methodId = $_POST['methodId'];
+        
+        if(Expenses::deletePaymentMEthod($userId, $methodId)) {
+            echo "success";
+        } else {
+            echo "failure";
+        }
+    }     
+    
+    public function addPaymentMethodAction()
+    {
+        $this->user = Auth::getUser();
+        $userId = $this->user->id;
+        
+        $methodName = $_POST['name'];
+        
+        $addNewMethodResponse = Expenses::addNewPaymentMethod($userId, $methodName);
+        
+        if($addNewMethodResponse == "success") {
+            echo Expenses::getNewPaymentMethodId($methodName, $userId);
+        } else {
+            echo $addNewMethodResponse;
+        }
+        
+    }        
     
 }
 

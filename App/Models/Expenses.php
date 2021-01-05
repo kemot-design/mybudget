@@ -359,6 +359,118 @@ class Expenses extends \Core\Model
             return 'Błąd serwera';
         }
     }
+    
+    public static function isMethodNameUnique($newName, $userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "SELECT * FROM payment_methods_assigned_to_users
+                WHERE user_id = :userId AND name = :newMethodName";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":newMethodName", $newName, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        
+        if($stmt->rowCount() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }    
 
+    public static function editPaymentMethod($methodToEdit) 
+    {
+        if($methodToEdit['newMethodName'] == "") {
+            return "Nazwa metody płatności nie może być pusta";
+        } 
+        else if($methodToEdit['newMethodName'] != $methodToEdit['oldMethodName']) {
+            if(Expenses::isMethodNameUnique($methodToEdit['newMethodName'], $methodToEdit['userId']) == false) {
+                return "Taka metoda płątności już istnieje";
+            }
+        }    
+        
+        $db = static::getDB();
+        
+        $sql = "UPDATE payment_methods_assigned_to_users
+                SET name = :newName
+                WHERE user_id = :userId AND id = :methodId";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":newName", $methodToEdit['newMethodName'], PDO::PARAM_STR);
+        $stmt->bindValue(":userId", $methodToEdit['userId'], PDO::PARAM_INT);
+        $stmt->bindValue(":methodId", $methodToEdit['methodId'], PDO::PARAM_INT);
+        
+        if($stmt->execute()) {
+            return "success";
+        } else {
+            return "Błąd serwera, przepraszamy";
+        }
+        
+    }    
+    
+    public static function deletePaymentMethod($userId, $methodId) 
+    {
+        
+        $db = static::getDB();
+        
+        $sql = "DELETE FROM payment_methods_assigned_to_users
+                WHERE user_id= :userId AND id = :methodId";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":methodId", $methodId, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+        
+    }   
+    
+    public static function addNewPaymentMethod($userId, $methodName)
+    {
+        if($methodName == "") {
+            return "Nazwa metody płatności nie może być pusta";
+        }
+        else if(Expenses::isMethodNameUnique($methodName, $userId) == false) {
+            return "Taka metoda płątności już istnieje";
+        }
+        
+        $db = static::getDB();
+        
+        $sql = "INSERT INTO payment_methods_assigned_to_users (user_id, name)
+                VALUES(:userId, :methodName)";
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":methodName", $methodName, PDO::PARAM_STR);
+        
+        if($stmt->execute()) {            
+            return "success";
+        } else {
+            return "Błąd serwera";
+        }
+    }
+    
+    
+    public static function getNewPaymentMethodId($methodName, $userId)
+    {
+        $db = static::getDB();
+        
+        $sql = "SELECT id FROM payment_methods_assigned_to_users
+                WHERE user_id = :userId AND name = :methodName";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":methodName", $methodName, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        if($stmt->execute()) {
+            $result = $stmt->fetch();
+            return $result['id']; 
+        } else {
+            return 'Błąd serwera';
+        }
+    }      
     
 }
