@@ -20,3 +20,28 @@ $.validator.addMethod('validPassword',
     'Must contain at least one letter and one number'
 );
 
+
+$.validator.addMethod('dateRange',
+    function(value, element) {
+
+        var earliestValidDate = new Date(2000, 0, 1);
+    
+        var latestValidDate = new Date();
+    
+        latestValidDate.setMonth(latestValidDate.getMonth() + 1);
+    
+        var operationDate = new Date(value);
+
+        if (operationDate.getTime() > earliestValidDate.getTime() && operationDate.getTime() <= latestValidDate.getTime()) 
+        {
+            return true;
+
+        } else {
+
+            return false;   
+        }
+
+    },
+
+    'Please choose date from 2020:01:01 up to one month from today'
+);

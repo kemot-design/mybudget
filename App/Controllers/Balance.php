@@ -42,17 +42,28 @@ class Balance extends Authenticated
        $balanceHeader = $this->setBalanceHeader($balancePeriod);
         
        $incomeSumsByCategory = $this->getIncomesByCategory($balancePeriod);
-          
-       //$incomesSum = number_format($incomesSum, 2, '.', ' ');
 
        $expenseSumsByCategory = $this->getExpensesByCategory($balancePeriod);
        
-      //$expensesSum = number_format($expensesSum, 2, '.', ' ');
+       $userExpenses = $this->getAllUserExpenses($balancePeriod);
+       
+       $userIncomes = $this->getAllUserIncomes($balancePeriod);
+       
+       $userId = $this->user->id;
+       
+        $userDefinedIncomeCategories = Incomes::getUserAssignedCategories($userId); 
+        $userDefinedExpenseCategories = Expenses::getUserAssignedCategories($userId);
+        $userDefinedPaymentMethods = Expenses::getUserDefinedPaymentMethods($userId);       
            
        View::renderTemplate('Balance/show.html', [
            'incomeSumsByCategory' => $incomeSumsByCategory,
            'expenseSumsByCategory' => $expenseSumsByCategory,
-           'header' => $balanceHeader
+           'header' => $balanceHeader,
+           'expenses' => $userExpenses,
+           'incomes' => $userIncomes,
+           'incomeCategories' => $userDefinedIncomeCategories,
+           'paymentMethods' => $userDefinedPaymentMethods,
+           'expenseCategories' => $userDefinedExpenseCategories
        ]);
    
    }
@@ -97,7 +108,7 @@ class Balance extends Authenticated
     {
        switch($balancePeriod){
            case 1:
-               $balanceHeader = 'bierzący miesiąc';
+               $balanceHeader = 'bieżący miesiąc';
             break;
 
            case 2:
@@ -105,7 +116,7 @@ class Balance extends Authenticated
             break;
 
            case 3:
-               $balanceHeader = 'bierzący rok';
+               $balanceHeader = 'bieżący rok';
             break;
 
             case 4:
@@ -159,11 +170,11 @@ class Balance extends Authenticated
         
         if ($balancePeriod != 4) {
 
-           $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod);
+            $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod);
 
         } else if ($this->isDataRangeValid($_POST['balance_start_date'], $_POST['balance_end_date'])) {
 
-           $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
+            $expenseSumsByCategory = Expenses::getSumsGroupedByCategory($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
 
         } else {
 
@@ -173,5 +184,59 @@ class Balance extends Authenticated
 
         return $expenseSumsByCategory;
     }    
+    
+    /**
+    * Get all user's expenses from selected period from data base
+    *
+    * @param int $balancePeriod number that indicate balance dates range
+    *
+    * @return mixed array or redirect to balance/show 
+    */
+    private function getAllUserExpenses($balancePeriod)
+    {
+         
+        if ($balancePeriod != 4) {
+            
+            $userExpenses = Expenses::getExpensesFromSelectedPeriod($this->user->id, $balancePeriod);
+
+        } else if ($this->isDataRangeValid($_POST['balance_start_date'], $_POST['balance_end_date'])) {
+            
+            $userExpenses = Expenses::getExpensesFromSelectedPeriod($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
+
+        } else {
+
+           $this->redirect('/balance/show');
+           exit;
+        }
+
+        return $userExpenses;
+    }   
+    
+    /**
+    * Get all user's incomes from selected period from data base
+    *
+    * @param int $balancePeriod number that indicate balance dates range
+    *
+    * @return mixed array or redirect to balance/show 
+    */
+    private function getAllUserIncomes($balancePeriod)
+    {
+         
+        if ($balancePeriod != 4) {
+            
+            $userIncomes = Incomes::getIncomesFromSelectedPeriod($this->user->id, $balancePeriod);
+
+        } else if ($this->isDataRangeValid($_POST['balance_start_date'], $_POST['balance_end_date'])) {
+            
+            $userIncomes = Incomes::getIncomesFromSelectedPeriod($this->user->id, $balancePeriod, $_POST['balance_start_date'], $_POST['balance_end_date']);
+
+        } else {
+
+           $this->redirect('/balance/show');
+           exit;
+        }
+
+        return $userIncomes;
+    }      
 
 }

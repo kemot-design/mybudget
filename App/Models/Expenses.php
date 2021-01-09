@@ -124,6 +124,37 @@ class Expenses extends \Core\Model
 
         return false;
     }
+    
+    /**
+     * Edit expense with values sent by Expense object
+     *
+     * @return boolean  True if the expense was edited, false otherwise
+     */       
+    public function edit()
+    {
+        $this->validate();
+
+        if (empty($this->errors)) {
+            
+            $sql = 'UPDATE expenses
+                    SET expense_category_assigned_to_user_id = :category, payment_method_assigned_to_user_id = :paymentMethod, amount = :amount, date_of_expense = :date, expense_comment = :comment
+                    WHERE id = :categoryId';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':category', $this->expense_category, PDO::PARAM_STR);
+            $stmt->bindValue(':paymentMethod', $this->payment_method, PDO::PARAM_STR);
+            $stmt->bindValue(':amount', $this->amount, PDO::PARAM_STR);
+            $stmt->bindValue(':date', $this->date_of_expense, PDO::PARAM_STR);
+            $stmt->bindValue(':comment', $this->expense_comment, PDO::PARAM_STR);
+            $stmt->bindValue(':categoryId', $this->id, PDO::PARAM_INT);
+
+            return $stmt->execute();
+        }
+
+        return false;
+    }    
 
     /**
      * Validate current property values, adding valiation error messages to the errors array property
@@ -140,9 +171,19 @@ class Expenses extends \Core\Model
             $this->errors[] = 'Amount cannot be greater than 999 999.99';
         }
         
-        $today = date('Y-m-d');
+        //$today = date('Y-m-d');
+        $today = date_create(date('Y-m-d'));
+        
+        $todayPlusOneMonth = date_add($today, date_interval_create_from_date_string("1 month"));
+        
+        $todayPlusOneMonth = date_format($todayPlusOneMonth, 'Y-m-d');
+        
+        if($today == false) {
+            
+            $this->errors[] = "Some problems with calculating one month from today's date in Expenses validate function";
+        }
 
-        if ($this->date_of_expense < "2000-01-01" || $this->date_of_expense == 0 || $this->date_of_expense > $today) {
+        if ($this->date_of_expense < "2000-01-01" || $this->date_of_expense == 0 || $this->date_of_expense > $todayPlusOneMonth) {
             $this->errors[] = 'Select correct date'; 
         }
 
@@ -213,6 +254,59 @@ class Expenses extends \Core\Model
         }
         
         return $expenseSums;
+
+    }
+    
+    /**
+     * Get the expenses of a specyfic user from selected period
+     *
+     * @return associaive array category name as key, sum as value
+     */
+    public static function getExpensesFromSelectedPeriod($userId, $balancePeriod = 1, $startDate = NULL, $endDate = NULL)
+    {
+        
+        switch($balancePeriod){
+
+            case 1:
+                $date_query = " date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY ";
+                break;
+
+            case 2:
+                $date_query = " date_of_expense >= (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 2 MONTH) AND date_of_expense < (LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH) ";
+                break;
+
+            case 3:
+                $date_query = " YEAR(date_of_expense) = YEAR(CURDATE()) ";
+                break;
+                
+            case 4:
+                $date_query = " date_of_expense >= :startDate AND date_of_expense <= :endDate ";
+                break;    
+        }
+        
+        $sql = "SELECT expenses.id, ecatu.name AS category, ecatu.id AS categoryId, pmatu.name AS pay_method, expenses.amount, expenses.date_of_expense, expenses.expense_comment FROM expenses_category_assigned_to_users AS ecatu, expenses, payment_methods_assigned_to_users AS pmatu WHERE expenses.user_id = :user_id AND expenses.payment_method_assigned_to_user_id = pmatu.id AND expenses.expense_category_assigned_to_user_id = ecatu.id AND " . $date_query . " ORDER BY date_of_expense DESC";
+        
+        $db = static::getDB();
+        
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        
+        if ($balancePeriod == 4) {
+            $stmt->bindValue(':startDate', $startDate, PDO::PARAM_STR);
+            $stmt->bindValue(':endDate', $endDate, PDO::PARAM_STR);   
+        }
+        
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        $stmt->execute();
+        
+        $userExpenses = [];
+        
+        while($resultRow = $stmt->fetch()){
+            $userExpenses[] = $resultRow;
+        }
+        
+        return $userExpenses;
 
     }
     
@@ -528,6 +622,39 @@ class Expenses extends \Core\Model
             return $result['expensesSum']; 
         } else {
             return 'Serwer error';
+        }
+    }
+    
+    public static function doesExpenseBelongToUser($expenseId, $userId)
+    {
+        $sql = 'SELECT amount FROM expenses
+                WHERE id = :expenseId AND user_id = :userId';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':expenseId', $expenseId, PDO::PARAM_INT);
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if($stmt->rowCount() == 0 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public static function deleteSingleExpense($expenseId, $userId)
+    {
+        if(Expenses::doesExpenseBelongToUser($expenseId, $userId)) {
+            
+            $sql = 'DELETE FROM expenses
+                    WHERE id = :expenseId';
+            
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':expenseId', $expenseId, PDO::PARAM_INT);
+            
+            return $stmt->execute();        
         }
     }
     

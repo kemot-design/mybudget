@@ -95,5 +95,33 @@ class Expense extends Authenticated
         
         echo $expensesSum;
     }
+    
+    public function editSingleExpenseAction() 
+    {
+        $editedExpense = new Expenses($_POST);
+        
+        if ($editedExpense->edit()) {
+            
+            //Flash::addMessage('Wydatek został zmieniony');
+            
+            $this->redirect('/Balance/show');
+            
+        } else {
+            Flash::addMessage('Niepoprawne dane, popraw formularz', Flash::WARNING);
+            
+            $this->redirect('/Balance/show');
+        }
+    }
+    
+    public function deleteSingleExpenseAction()
+    {
+        $userId = $this->user->id;
+        
+        if(Expenses::deleteSingleExpense($_POST['expenseId'], $userId)) {
+            echo 'success';
+        } else {
+            echo 'Nie udało się usunąć wydatku';
+        }
+    }
 
 }

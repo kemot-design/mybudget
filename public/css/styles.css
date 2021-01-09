@@ -174,7 +174,7 @@ ul > li:hover > a
 }
 
 .content-header{
-	font-size: 30px;
+	font-size: 25px;
     font-weight: 700;
 	padding-top: 25px;
 	padding-bottom: 15px;
@@ -213,48 +213,13 @@ input[type=radio]
 	margin-left: 10px;
 }
 
-table
-{
-	border-collapse: collapse;
-	font-size: 16px;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    color: black;
-}
-
 table, td, th
 {
 	border: 1px solid black;
 }
 
-.incomes-header{
-	font-size: 17px;
-	background-color: #4CAF50;
-	color: black;
-	text-align: center;
-}
-
-.expenses-header{
-	font-size: 17px;
-	background-color: #ff3223;
-	color: black;
-	text-align: center;
-}
-
-th, td
-{
-	padding: 3px 5px;
-}
-
-tr td:nth-child(1)
-{
-	width: 60%;
-}
-
-tr th:nth-child(1)
-{
-	width: 60%;
+.table-detailed-operations {
+    font-size: 12px;
 }
 
 .sum-row
@@ -417,4 +382,12 @@ img{
     border: 3px solid green;
     border-radius: 8px;
     background-color: lightgreen;
+}
+
+.pic-hover:hover {
+    cursor: pointer;
+}
+
+.inline-form {
+    display: inline-block;
 }
