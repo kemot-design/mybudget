@@ -6,6 +6,7 @@
 
 <script src="/js/balance.js"></script>
 <script src="/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
 {% endblock %}
 
@@ -104,9 +105,9 @@
                               {% for income in incomeSumsByCategory %}
                               
                                 <tr>
-                                    <th scope="row">{{ loop.index }}</th>
-                                    <td>{{ income.name }}</td> 
-                                    <td>{{ income.categorySum }} zł</td>     
+                                    <th id="income-sums-loop" data-loops-number="{{ loop.revindex }}" scope="row">{{ loop.index }}</th>
+                                    <td id="income-category-name-{{ loop.index }}">{{ income.name }}</td> 
+                                    <td><span id="income-category-sum-{{ loop.index }}">{{ income.categorySum|number_format(2,'.','') }}</span> zł</td>     
                                 </tr> 
                               
                               {% set incomeTotalSum = incomeTotalSum + income.categorySum %}
@@ -114,7 +115,7 @@
                               
                                 <tr class="bg-success">
                                     <td style="border: 1px solid black;">Suma</td>
-                                    <td colspan="2" style="border: 1px solid black;">{{ incomeTotalSum }} zł</td>
+                                    <td colspan="2" style="border: 1px solid black;"><span id="incomes-sum">{{ incomeTotalSum|number_format(2,'.','') }}</span> zł</td>
                                 </tr>
                               
                           </tbody>
@@ -140,9 +141,9 @@
                               {% for expense in expenseSumsByCategory %}
                               
                                 <tr>
-                                    <th scope="row">{{ loop.index }}</th>
-                                    <td>{{ expense.name }}</td> 
-                                    <td>{{ expense.categorySum }} zł</td>     
+                                    <th id="expense-sums-loop" data-loops-number="{{ loop.revindex }}" scope="row">{{ loop.index }}</th>
+                                    <td id="expense-category-name-{{ loop.index }}">{{ expense.name }}</td> 
+                                    <td><span id="expense-category-sum-{{ loop.index }}">{{ expense.categorySum|number_format(2,'.','') }}</span> zł</td>     
                                 </tr> 
                               
                               {% set expenseTotalSum = expenseTotalSum + expense.categorySum %}
@@ -150,7 +151,7 @@
                               
                                 <tr class="bg-danger">
                                     <td style="border: 1px solid black;">Suma</td>
-                                    <td colspan="2" style="border: 1px solid black;">{{ expenseTotalSum }} zł</td>
+                                    <td colspan="2" style="border: 1px solid black;"><span id="expenses-sum">{{ expenseTotalSum|number_format(2,'.','') }}</span> zł</td>
                                 </tr>
                               
                           </tbody>
@@ -158,18 +159,31 @@
 
                     </div>	
 
-                </div>               
-
-                <div class="balance-row">
+                </div>     
+                
+                <div class="row balance-row">
+                    <div class="col-sm-6 col-md-4 offset-md-1">
+                        <canvas id="totals-chart" width="200" height="200"></canvas>
+                    </div>
+                    <div class="col-sm-6 col-sm-5 offset-md-2 balance-info">
                           
-                    Twój bilans: {{ incomeTotalSum - expenseTotalSum }} zł <br/>
-                    {% if totalIncome >= totalExpense %}
-                        Brawo, zarabiasz więcej niż wydajesz.
-                    {% else %}
-                        Uważaj, wydajesz więcej niż zarabiasz!
-                    {% endif %}     
+                        Twój bilans: <span id='balance-value'></span> zł
+                        <div id="balance-message"></div>
 
+                    </div>             
                 </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 px-5">
+                        <canvas id="incomes-chart" width="200" height="200"></canvas>
+                    </div>                    
+                    <div class="col-md-6 px-5">
+                        <canvas id="expenses-chart" width="200" height="200"></canvas>
+                    </div>
+                </div>
+                
+
+                
                                 
                 <div class="row my-4">
 
@@ -195,7 +209,7 @@
                                 <tr id="income-{{ income.id }}">
                                     <th scope="row">{{ loop.index }}</th>
                                     <td id="inc-ctg-{{ income.id }}" data-inc-ctg-id="{{ income.categoryId }}">{{ income.category }}</td> 
-                                    <td id="inc-amount-{{ income.id }}">{{ income.amount }} zł</td>   
+                                    <td id="inc-amount-{{ income.id }}">{{ income.amount|number_format(2,'.','') }} zł</td>   
                                     <td id="inc-date-{{ income.id }}">{{ income.date_of_income }}</td>    
                                     <td id="inc-comment-{{ income.id }}">{{ income.income_comment }}</td>
                                     <td id="edit-inc-id-{{ income.id }}" class="edit-income pic-hover" data-income-id="{{ income.id }}"><img src="/img/edit.png"/></td>
@@ -235,7 +249,7 @@
                                 <tr id="expense-{{ expense.id }}">
                                     <th scope="row">{{ loop.index }}</th>
                                     <td id="exp-ctg-{{ expense.id }}" data-exp-ctg-id="{{ expense.categoryId }}">{{ expense.category }}</td> 
-                                    <td id="exp-amount-{{ expense.id }}">{{ expense.amount }} zł</td>   
+                                    <td id="exp-amount-{{ expense.id }}">{{ expense.amount|number_format(2,'.','') }} zł</td>   
                                     <td id="exp-date-{{ expense.id }}">{{ expense.date_of_expense }}</td>   
                                     <td id="exp-pay-method-{{ expense.id }}">{{ expense.pay_method }}</td>   
                                     <td id="exp-comment-{{ expense.id }}">{{ expense.expense_comment }}</td>

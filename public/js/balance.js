@@ -199,5 +199,171 @@ $(document).ready(function(){
         }); 
         
     });
+    
+//graphs
+    
+    var incomesSum = parseFloat($('#incomes-sum').text());
+    var expensesSum = parseFloat($('#expenses-sum').text());
+    var balance = Math.floor((incomesSum - expensesSum)*100)/100;
+    var balanceMessage = "";
+    
+    if(balance >= 0) {
+        balanceMessage = 'Brawo, zarabiasz więcej niż wydajesz.'
+        
+        $('#balance-value').addClass('positive-balance');
+        $('#balance-value').removeClass('negative-balance');
+        
+    } else {
+        balanceMessage = 'Uważaj, wydajesz więcej niż zarabiasz.'
+        
+        $('#balance-value').removeClass('positive-balance');
+        $('#balance-value').addClass('negative-balance');
+    }
+    
+    $('#balance-value').text(balance);
+    $('#balance-message').text(balanceMessage);
+    
+    var ctx1 = document.getElementById('totals-chart').getContext('2d');
+    var myChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Przychody', 'Wydatki'],
+            datasets: [{
+                label: 'Suma',
+                data: [incomesSum, expensesSum],
+                backgroundColor: [
+                    'rgba(50, 250, 50, 0.6)',
+                    'rgba(240, 50, 50, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(50, 250, 50, 1)',
+                    'rgba(240, 50, 50, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        callback: function(value, index, values) {
+                        return value + ' zł';
+                        }
+                    }
+                }]
+            },
+            legend: {
+                display: false
+            }
+        }
 
+    });
+    
+ //incomes by category pie chart
+    
+    var incomeCategoryNumber = $('#income-sums-loop').data('loops-number');
+    
+    var incomeCategoriesInBalance = [];
+    var incomeCategorieSumsInBalance = [];
+    var chartColor = [];
+    var chatBorderColor = [];
+    var colorPallette = ['rgba(0, 250, 0', 'rgba(250, 0, 0', 'rgba(0, 0, 250', 'rgba(250, 250, 0', 'rgba(250, 0, 250', 'rgba(0, 250, 250', 'rgba(250, 150, 50', 'rgba(50, 150, 250', 'rgba(150, 250, 50', 'rgba(175, 200, 150', 'rgba(175, 100, 50','rgba(150, 50, 120', 'rgba(100, 50, 200', 'rgba(30, 90, 30', 'rgba(25, 50, 25','rgba(200, 220, 200', 'rgba(20, 50, 80', 'rgba(100, 50, 0', 'rgba(150, 150, 220', 'rgba(100, 50, 50','rgba(200, 200, 200', 'rgba(75, 225, 150', 'rgba(88, 156, 150', 'rgba(250, 150, 200', 'rgba(100, 150, 75', 'rgba(125, 200, 125'];
+    
+    
+    for(var i = 1 ; i <= incomeCategoryNumber ; i++) {
+        incomeCategoriesInBalance.push($('#income-category-name-' + i).text());
+        
+        incomeCategorieSumsInBalance.push($('#income-category-sum-' + i).text());
+        
+        chartColor.push(colorPallette[i-1] + ", 0.6)");
+        chatBorderColor.push(colorPallette[i-1] + ", 1)");
+    }
+           
+    var ctx2 = document.getElementById('incomes-chart').getContext('2d');
+    var myChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: incomeCategoriesInBalance,
+            datasets: [{
+                label: 'Suma',
+                data: incomeCategorieSumsInBalance,
+                backgroundColor: chartColor,
+                borderColor: chatBorderColor,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    display: false
+                },
+                x: {
+                    display: false
+                }
+            },
+            legend: {
+                position: 'right'
+            },
+            title: {
+                display: true,
+                text: 'Przychody'
+            }
+        }
+
+    });
+    
+
+//expenses by category pie chart
+    
+    var expenseCategoryNumber = $('#expense-sums-loop').data('loops-number');
+    
+    var expenseCategoriesInBalance = [];
+    var expenseCategorieSumsInBalance = [];
+    var chartColor = [];
+    var chatBorderColor = [];
+    
+    for(var i = 1 ; i <= expenseCategoryNumber ; i++) {
+        expenseCategoriesInBalance.push($('#expense-category-name-' + i).text());
+        
+        expenseCategorieSumsInBalance.push($('#expense-category-sum-' + i).text());
+        
+        chartColor.push(colorPallette[i-1] + ", 0.6)");
+        chatBorderColor.push(colorPallette[i-1] + ", 1)");
+    }  
+    
+    var ctx3 = document.getElementById('expenses-chart').getContext('2d');
+    var myChart = new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: expenseCategoriesInBalance,
+            datasets: [{
+                label: 'Suma',
+                data: expenseCategorieSumsInBalance,
+                backgroundColor: chartColor,
+                borderColor: chatBorderColor,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    display: false
+                },
+                x: {
+                    display: false
+                }
+            },
+            legend: {
+                position: 'right'
+            },
+            title: {
+                display: true,
+                text: 'Wydatki'
+            }
+        }
+
+    });
+        
+    
 });

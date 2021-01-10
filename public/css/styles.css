@@ -227,11 +227,10 @@ table, td, th
 	background-color: #b3b3b3;
 }
 
-.balance-row{
+.balance-info{
 	font-size: 20px;
 	font-weight: 700;
-	margin-top: 20px;
-	margin-bottom: 20px;
+	margin: auto;
 }
 
 .form-legend{
@@ -390,4 +389,12 @@ img{
 
 .inline-form {
     display: inline-block;
+}
+
+.positive-balance {
+    color: green;
+}
+
+.negative-balance {
+    color: red;
 }
