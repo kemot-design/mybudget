@@ -601,19 +601,21 @@ class Expenses extends \Core\Model
         }
     }
     
-    public static function getCurrentMonthExpensesSum($userId, $categoryId)
+    public static function getSelectedMonthExpensesSum($userId, $categoryId, $expenseDate)
     {
         
         $sql = "SELECT COALESCE(SUM(amount),0) expensesSum 
         FROM expenses 
-        WHERE user_id = :userIdd AND expense_category_assigned_to_user_id = :categoryId AND date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY";
+        WHERE user_id = :userId AND expense_category_assigned_to_user_id = :categoryId AND YEAR(date_of_expense) = YEAR(:expenseDate) AND MONTH(date_of_expense) = MONTH(:expenseDate)";
+        //date_of_expense >= LAST_DAY(CURDATE()) + INTERVAL 1 DAY - INTERVAL 1 MONTH AND date_of_expense < LAST_DAY(CURDATE()) + INTERVAL 1 DAY
         
         $db = static::getDB();
         
         $stmt = $db->prepare($sql);
         
-        $stmt->bindValue(":userIdd", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":userId", $userId, PDO::PARAM_INT);
         $stmt->bindValue(":categoryId", $categoryId, PDO::PARAM_INT);
+        $stmt->bindValue(":expenseDate", $expenseDate, PDO::PARAM_STR);
         
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         

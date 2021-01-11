@@ -84,12 +84,13 @@ class Expense extends Authenticated
         }
     }
     
-    public function getCurrentMonthCategoryExpensesAction()
+    public function getSelectedMonthCategoryExpensesAction()
     {
         $userId = $this->user->id;
         $categoryId = $_POST['categoryId'];
+        $expenseDate = $_POST['expenseDate'];
         
-        $expensesSum = Expenses::getCurrentMonthExpensesSum($userId, $categoryId);
+        $expensesSum = Expenses::getSelectedMonthExpensesSum($userId, $categoryId, $expenseDate);
         
         //$expensesSum = ($expensesSum == NULL ? 0 : $expensesSum);
         

@@ -1,5 +1,9 @@
 $(document).ready(function(){
     
+    var today = new Date();
+    var todayISODate = today.toISOString().substr(0, 10);
+    $("#date_of_expense").val(todayISODate);
+    
     function updateLimitInfo()
     {
         var currentExpenseAmount = parseFloat($("#expense-value").text());
@@ -26,6 +30,37 @@ $(document).ready(function(){
         
     }
     
+    function getSelectedMonthCategoryExpenses(categoryId)
+    {
+        if($('#date_of_expense').val() == "") {
+            var today = new Date();
+            var expenseDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        } else {
+            var expenseDate = $('#date_of_expense').val();
+        }     
+        
+        $.ajax({
+            type: "POST",
+            url: "/expense/getSelectedMonthCategoryExpenses",
+            data: {
+                categoryId: categoryId,
+                expenseDate: expenseDate
+            },
+            success: function(expensesSum) {
+                if(expensesSum != 'Serwer error') {
+                    $("#existing-expenses").text(expensesSum); 
+                    //$("#limit-minus-expense").text(limitResponse - expensesSum);
+                } else {
+                    alert("serwer error, sorry");
+                }  
+            },
+            complete: function(){
+                updateLimitInfo();
+            }
+        });
+
+    }
+    
     $("#expense-category").change(function(){
         
         var categoryId = $(this).val();
@@ -33,7 +68,9 @@ $(document).ready(function(){
         $.ajax({
             type: "POST",
             url: "/expense/checkCategoryLimit",
-            data: {categoryId: categoryId},
+            data: {
+                categoryId: categoryId
+            },
             success: function(limitResponse){
                 if(limitResponse == "No limit") {
                     $("#category-limit").hide();
@@ -45,22 +82,7 @@ $(document).ready(function(){
                     $("#category-limit").show();
                     $("#limit-value").text(limitResponse);
                     
-                    $.ajax({
-                        type: "POST",
-                        url: "/expense/getCurrentMonthCategoryExpenses",
-                        data: {categoryId: categoryId},
-                        success: function(expensesSum) {
-                            if(expensesSum != 'Serwer error') {
-                                $("#existing-expenses").text(expensesSum); 
-                                $("#limit-minus-expense").text(limitResponse - expensesSum);
-                            } else {
-                                alert("serwer error, sorry");
-                            }  
-                        },
-                        complete: function(){
-                            updateLimitInfo();
-                        }
-                    });
+                    getSelectedMonthCategoryExpenses(categoryId);
                 }
             }
         });      
@@ -73,6 +95,17 @@ $(document).ready(function(){
         $("#expense-value").text(currentExpenseAmount);
         
         updateLimitInfo();
-    });
+    }); 
+    
+    $("#date_of_expense").change(function(){
+        
+        var categoryId = $("#expense-category").val();
+        
+        if(categoryId != "") {
+            getSelectedMonthCategoryExpenses(categoryId);
+        }
+        
+        updateLimitInfo();
+    });     
     
 });

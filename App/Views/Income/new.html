@@ -33,6 +33,10 @@
         );
 
         $(document).ready(function() {
+            
+            var today = new Date();
+            var todayISODate = today.toISOString().substr(0, 10);
+            $("#income_date").val(todayISODate);
     
             /**
              * Validate the form
@@ -160,7 +164,7 @@
                            <input type="submit" class="btn btn-success btn-block" value="Dodaj">
                         </div>
                         <div class="col-md-6 my-1">
-                           <a href="mainmenu.html" class="btn btn-danger btn-block">Anuluj</a>
+                           <a href="/Income/new" class="btn btn-danger btn-block">Anuluj</a>
                         </div>
 
                     </div>

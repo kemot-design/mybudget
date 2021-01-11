@@ -78,7 +78,8 @@
 
 
        
-    });
+    });    
+        
     </script>
 
 {% endblock %}
@@ -155,7 +156,7 @@
                         <div class="col-sm-10 offset-sm-1">
 
                             <label for="payment_method" class="formLegend"> Metoda płatności </label><br/>
-                            <select class="custom-select mr-sm-2" name="payment_method" required>
+                            <select class="custom-select mr-sm-2" id="payment-method" name="payment_method" required>
                                 <option selected value="0" disabled>Wybierz metodę płatności...</option>
                                     
                                 {% for method in paymentMethods %}
@@ -201,7 +202,7 @@
                            <input type="submit" class="btn btn-success btn-block" value="Dodaj">
                         </div>
                         <div class="col-md-6 my-1">
-                           <a href="mainmenu.html" class="btn btn-danger btn-block">Anuluj</a>
+                           <a href="/Expense/new" class="btn btn-danger btn-block">Anuluj</a>
                         </div>
 
                     </div>

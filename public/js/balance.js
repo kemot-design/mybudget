@@ -204,7 +204,7 @@ $(document).ready(function(){
     
     var incomesSum = parseFloat($('#incomes-sum').text());
     var expensesSum = parseFloat($('#expenses-sum').text());
-    var balance = Math.floor((incomesSum - expensesSum)*100)/100;
+    var balance = (Math.floor((incomesSum - expensesSum)*100)/100).toFixed(2);
     var balanceMessage = "";
     
     if(balance >= 0) {
