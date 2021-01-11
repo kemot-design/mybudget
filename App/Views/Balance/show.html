@@ -4,21 +4,9 @@
 
 {% block footer %}
 
-<script>
-    
-    $("#balance_period").change(function() {
-        var option_value = document.getElementById("balance_period").value;
-        if (option_value == "4") {
-             $("#balance_date_modal").modal({
-                show: true 
-             });
-        } else {
-            document.getElementById("balance_period").setAttribute("value", option_value);
-            document.getElementById("balanceForm").submit();
-        }
-    });
-    
-</script>
+<script src="/js/balance.js"></script>
+<script src="/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
 {% endblock %}
 
@@ -34,8 +22,67 @@
 
                 <header>
 
-                    <h2 class="content-header"><i class="icon-chart-bar"></i> Bilans - {{ header }} </h2>
+                    <div class="row mb-3">
+                        <div class="col-sm-12 col-md-8" >
+                            <h2 class="content-header"><i class="icon-chart-bar"></i> Bilans - {{ header }} </h2>
+                        </div>
 
+                        <div class="col-sm-12 col-md-4">
+                            <form action="/balance/show" method="POST" id="balanceForm">
+
+                                <!-- Modal -->
+                                <div id="balance_date_modal" class="modal fade" role="dialog">
+                                  <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h4 class="modal-title text-center">Wybierz okres bilansu</h4>
+                                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                                      </div>
+                                      <div class="modal-body">
+
+                                          <div class="row">
+                                            <div class="col-sm-10 offset-sm-1">
+
+                                                <label for="date_of_expense" class="formLegend"> Początek okresu: </label><br/>
+                                                <input class="form-control" type="date" name="balance_start_date">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-10 offset-sm-1">
+
+                                                <label for="date_of_expense" class="formLegend"> Koniec okresu: </label><br/>
+                                                <input class="form-control" type="date" name="balance_end_date">
+
+                                            </div>
+
+                                        </div> 
+                                      </div>
+
+                                      <div class="modal-footer">
+                                        <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
+                                         <input type="submit" class="btn btn-success btn-block mt-3" value="Pokaż bilans"> 
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+
+                                <select	class="custom-select mt-4" name="balance_period" id="balance_period" >
+                                    <option value="" selected disabled hidden>Wybierz okres bilansu</option>
+                                    <option value="1">Bierzący miesiąc</option>
+                                    <option value="2">Poprzedni miesiąc</option>
+                                    <option value="3">Bierzący rok</option>
+                                    <option value="4">Niestandardowa data</option>
+                                </select>
+
+                            </form>	                        
+                        </div>
+                    </div>
                 </header>								
 
                 <div class="row">
@@ -43,138 +90,434 @@
                     <div class="col-sm-12 col-md-6 py-2">
 
                         <h3>Przychody</h3>
-
-                        <table>
-                            <tr class="incomes-header">
-                                <th> Kategoria </th><th> Suma </th>
-                            </tr>
-                            
-                            {% set incomeTotalSum = 0 %}
-                            {% for income in incomeSumsByCategory %}
-                                <tr>
-                                    <td>{{ income.name }}</td> 
-                                    <td>{{ income.categorySum }}</td>  
-                                    {% set incomeTotalSum =  incomeTotalSum + income.categorySum %}
-                                </tr> 
-                            {% endfor %}
-                            
+                        
+                        <table class="table table-hover table-sm">
+                          <thead class="thead-dark">
                             <tr>
-                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ incomeTotalSum }}</td>
-                            </tr>									
-
-                        </table>
-
+                              <th scope="col" style="width: 4%">#</th>
+                              <th scope="col" style="width: 48%">Kategoria</th>
+                              <th scope="col" style="width: 48%">Suma</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                              {% set incomeTotalSum = 0 %}
+                              {% for income in incomeSumsByCategory %}
+                              
+                                <tr>
+                                    <th id="income-sums-loop" data-loops-number="{{ loop.revindex }}" scope="row">{{ loop.index }}</th>
+                                    <td id="income-category-name-{{ loop.index }}">{{ income.name }}</td> 
+                                    <td><span id="income-category-sum-{{ loop.index }}">{{ income.categorySum|number_format(2,'.','') }}</span> zł</td>     
+                                </tr> 
+                              
+                              {% set incomeTotalSum = incomeTotalSum + income.categorySum %}
+                              {% endfor %} 
+                              
+                                <tr class="bg-success">
+                                    <td style="border: 1px solid black;">Suma</td>
+                                    <td colspan="2" style="border: 1px solid black;"><span id="incomes-sum">{{ incomeTotalSum|number_format(2,'.','') }}</span> zł</td>
+                                </tr>
+                              
+                          </tbody>
+                        </table>                              
+                        
                     </div>
 
                     <div class="col-sm-12 col-md-6 py-2">
 
                         <h3>Wydatki</h3>
-
-                        <table>
-                            <tr class="expenses-header">
-                                <th> Kategoria </th><th> Suma </th>
+                        
+                        <table class="table table-hover table-sm">
+                          <thead class="thead-dark">
+                            <tr>
+                              <th scope="col" style="width: 4%">#</th>
+                              <th scope="col" style="width: 48%">Kategoria</th>
+                              <th scope="col" style="width: 48%">Suma</th>
                             </tr>
+                          </thead>
+                          <tbody>
                             
-                            {% set expenseTotalSum = 0 %}
-                            {% for expense in expenseSumsByCategory %}
+                              {% set expenseTotalSum = 0 %}
+                              {% for expense in expenseSumsByCategory %}
+                              
                                 <tr>
-                                    <td>{{ expense.name }}</td> 
-                                    <td>{{ expense.categorySum }}</td>   
-                                    {% set expenseTotalSum =  expenseTotalSum + expense.categorySum %}
+                                    <th id="expense-sums-loop" data-loops-number="{{ loop.revindex }}" scope="row">{{ loop.index }}</th>
+                                    <td id="expense-category-name-{{ loop.index }}">{{ expense.name }}</td> 
+                                    <td><span id="expense-category-sum-{{ loop.index }}">{{ expense.categorySum|number_format(2,'.','') }}</span> zł</td>     
                                 </tr> 
-                            {% endfor %}
-
-                            <tr >
-                                <td class="sum-row"> Suma </td><td class="sum-row"> {{ expenseTotalSum }}</td>
-                            </tr>									
-                        </table>						
+                              
+                              {% set expenseTotalSum = expenseTotalSum + expense.categorySum %}
+                              {% endfor %} 
+                              
+                                <tr class="bg-danger">
+                                    <td style="border: 1px solid black;">Suma</td>
+                                    <td colspan="2" style="border: 1px solid black;"><span id="expenses-sum">{{ expenseTotalSum|number_format(2,'.','') }}</span> zł</td>
+                                </tr>
+                              
+                          </tbody>
+                        </table>                          					
 
                     </div>	
 
-                </div>
-
-                <div class="balance-row">
+                </div>     
+                
+                <div class="row balance-row">
+                    <div class="col-sm-6 col-md-4 offset-md-1">
+                        <canvas id="totals-chart" width="200" height="200"></canvas>
+                    </div>
+                    <div class="col-sm-6 col-sm-5 offset-md-2 balance-info">
                           
-                    Twój bilans: {{ incomeTotalSum - expenseTotalSum }} zł <br/>
-                    {% if totalIncome >= totalExpense %}
-                        Brawo, zarabiasz więcej niż wydajesz.
-                    {% else %}
-                        Uważaj, wydajesz więcej niż zarabiasz!
-                    {% endif %}
-                    
+                        Twój bilans: <span id='balance-value'></span> zł
+                        <div id="balance-message"></div>
 
+                    </div>             
                 </div>
-
-                <form action="/balance/show" method="POST" id="balanceForm">
-
-                    <!-- Modal -->
-                    <div id="balance_date_modal" class="modal fade" role="dialog">
-                      <div class="modal-dialog">
-
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h4 class="modal-title text-center">Wybierz okres bilansu</h4>
-                            <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
-                          </div>
-                          <div class="modal-body">
-
-                              <div class="row">
-                                <div class="col-sm-10 offset-sm-1">
-
-                                    <label for="date_of_expense" class="formLegend"> Początek okresu: </label><br/>
-                                    <input class="form-control" type="date" name="balance_start_date">
-
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-10 offset-sm-1">
-
-                                    <label for="date_of_expense" class="formLegend"> Koniec okresu: </label><br/>
-                                    <input class="form-control" type="date" name="balance_end_date">
-
-                                </div>
-
-                            </div> 
-                          </div>
-
-                          <div class="modal-footer">
-                            <!--<input type="submit" class="btn btn-success" data-dismiss="modal" value="Wybierz"> -->
-                             <input type="submit" class="btn btn-success btn-block mt-3" value="Pokaż bilans"> 
-                          </div>
-                        </div>
-
-                      </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 px-5">
+                        <canvas id="incomes-chart" width="200" height="200"></canvas>
+                    </div>                    
+                    <div class="col-md-6 px-5">
+                        <canvas id="expenses-chart" width="200" height="200"></canvas>
                     </div>
+                </div>
+                
 
+                
+                                
+                <div class="row my-4">
 
-                    <div class="row py-3"> 
-                        <div class="col-md-6">
+                    <div class="col-md-10 offset-md-1">
 
-                            <label for="balance-date"> Wybierz okres: </label>
-                            <select	class="custom-select mb-2" name="balance_period" id="balance_period" >
-                                <option value="" selected disabled hidden>Wybierz tutaj</option>
-                                <option value="1">Bierzący miesiąc</option>
-                                <option value="2">Poprzedni miesiąc</option>
-                                <option value="3">Bierzący rok</option>
-                                <option value="4">Niestandardowa data</option>
-                            </select>
-                        </div>
-
-                        <!-- since I have written submitting form in changeBudgetPeriod() function without the need to push a ubmit button, we no longer need the button
-                        <div class="col-md-6 my-1">
-                           <input type="submit" class="btn btn-success btn-block mt-3" value="Pokaż bilans">
-                        </div>
-                        -->
+                        <h4>Zestawienie przychodów</h4>
                         
-                    </div>
-                </form>	
+                        <table class="table table-sm table-hover table-detailed-operations">
+                          <thead>
+                            <tr class="bg-success">
+                              <th scope="col" style="width: 4%">#</th>
+                              <th scope="col" style="width: 20%">Kategoria</th>
+                              <th scope="col" style="width: 15%">Kwota</th>
+                              <th scope="col" style="width: 15%">Data</th>
+                              <th scope="col" style="width: 30%">Komentarz</th>
+                              <th scope="col" style="width: 7%">Edytuj</th>
+                              <th scope="col" style="width: 7%">Usuń</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                              {% for income in incomes %}
+                                <tr id="income-{{ income.id }}">
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td id="inc-ctg-{{ income.id }}" data-inc-ctg-id="{{ income.categoryId }}">{{ income.category }}</td> 
+                                    <td id="inc-amount-{{ income.id }}">{{ income.amount|number_format(2,'.','') }} zł</td>   
+                                    <td id="inc-date-{{ income.id }}">{{ income.date_of_income }}</td>    
+                                    <td id="inc-comment-{{ income.id }}">{{ income.income_comment }}</td>
+                                    <td id="edit-inc-id-{{ income.id }}" class="edit-income pic-hover" data-income-id="{{ income.id }}"><img src="/img/edit.png"/></td>
+                                    <td id="edit-inc-id-{{ income.id }}" class="del-income pic-hover" data-income-id="{{ income.id }}"><img src="/img/delete.png"/></td>
+                                </tr> 
+                              {% endfor %}    
+                              
+                          </tbody>
+                        </table>
+
+                    </div>	
+
+                </div> 
+
+                <div class="row pb-4">
+
+                    <div class="col-md-10 offset-md-1">
+
+                        <h4>Zestawienie wydatków</h4>
+                        
+                        <table class="table table-sm table-hover table-detailed-operations">
+                          <thead>
+                            <tr class="bg-danger">
+                              <th scope="col" style="width: 4%">#</th>
+                              <th scope="col" style="width: 20%">Kategoria</th>
+                              <th scope="col" style="width: 12%">Kwota</th>
+                              <th scope="col" style="width: 12%">Data</th>
+                              <th scope="col" style="width: 16%">Płatność</th>
+                              <th scope="col" style="width: 20%">Komentarz</th>
+                              <th scope="col" style="width: 7%">Edytuj</th>
+                              <th scope="col" style="width: 7%">Usuń</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            
+                              {% for expense in expenses %}
+                                <tr id="expense-{{ expense.id }}">
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td id="exp-ctg-{{ expense.id }}" data-exp-ctg-id="{{ expense.categoryId }}">{{ expense.category }}</td> 
+                                    <td id="exp-amount-{{ expense.id }}">{{ expense.amount|number_format(2,'.','') }} zł</td>   
+                                    <td id="exp-date-{{ expense.id }}">{{ expense.date_of_expense }}</td>   
+                                    <td id="exp-pay-method-{{ expense.id }}">{{ expense.pay_method }}</td>   
+                                    <td id="exp-comment-{{ expense.id }}">{{ expense.expense_comment }}</td>
+                                    <td id="edit-exp-id-{{ expense.id }}" class="edit-expense pic-hover" data-expense-id="{{ expense.id }}"><img src="/img/edit.png"/></td>
+                                    <td id="del-exp-id-{{ expense.id }}" class="del-expense pic-hover" data-expense-id="{{ expense.id }}"><img src="/img/delete.png"/></td>
+                                </tr> 
+                              {% endfor %}    
+                              
+                          </tbody>
+                        </table>
+
+                    </div>	
+
+                </div>                 
 
             </article>
+            
+            <!-- Edit Income Modal -->
+            <div id="edit-income-modal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
 
-        </div>    
+                <!-- Modal content-->
+                <div class="modal-content">
+                    
+                    <form action="/Income/editSingleIncome" method="POST" id="edit-income">
+                        
+                        <input type="hidden" id="editing-income-id" name="id">   
+                        
+                      <div class="modal-header">
+                        <h4 class="modal-title text-center">Edycja przychodu</h4>
+                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                      </div>
+
+                      <div class="modal-body">  
+                          
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="amount" class="formLegend">Kategoria</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="custom-select mr-sm-2" id="income-category" name="income_category_assigned_to_user_id" required>
+                                    
+                                    {% for category in incomeCategories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="amount" class="formLegend">Kwota</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control inline-form" type="number" name="amount" id="income-amount" step="0.01" required>
+                            </div>
+                        </div>      
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="date_of_income" class="formLegend">Data</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="date" name="date_of_income" id="date-of-income" required>
+                            </div>
+                        </div>                            
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="comment" class="formLegend"> Komentarz (opcjonalnie) </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="income-comment" name="income_comment" rows="2" cols="44" placeholder="Twój komentarz ..."></textarea>
+                            </div>
+                        </div>  
+
+                      </div>
+
+                      <div class="modal-footer">
+                          <div class="row col-sm-12">
+                              <div class="col-sm-6">
+                                <button type="submit" class="btn btn-success w-100 py-2">Zapisz zmiany</button>
+                              </div>
+                              <div class="col-sm-6">
+                                <buton class="btn btn-danger w-100 py-2" data-dismiss="modal">Anuluj</buton> 
+                              </div>
+                          </div>
+                      </div>
+                        
+                    </form> 
+                    
+                </div>
+
+              </div>
+            </div>       
+            
+            <!-- Delete Income Modal -->
+            <div id="del-income-modal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title text-center">Usunięcie przychodu</h4>
+                    <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-1">
+
+                            <p>Czy na pewno usunąć przychód?</p>
+
+                        </div>
+
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-4 offset-1 px-1">
+                             <button id="del-income-btn" class="btn btn-primary mt-2 w-100" data-dismiss="modal">Usuń</button>
+                        </div>
+                        <div class="col-sm-4 offset-2 px-1">
+                             <button class="btn btn-danger mt-2 cancel-btn w-100" data-dismiss="modal">Anuluj</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>                   
+
+            <!-- Edit Expense Modal -->
+            <div id="edit-expense-modal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    
+                    <form action="/Expense/EditSingleExpense" method="POST" id="edit-expense">
+                        
+                        <input type="hidden" id="editing-expense-id" name="id">   
+                        
+                      <div class="modal-header">
+                        <h4 class="modal-title text-center">Edycja wydatku</h4>
+                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                      </div>
+
+                      <div class="modal-body">  
+                          
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="amount" class="formLegend">Kategoria</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="custom-select mr-sm-2" id="expense-category" name="expense_category" required>
+                                    
+                                    {% for category in expenseCategories %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                    
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="amount" class="formLegend">Kwota</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control inline-form" type="number" name="amount" id="expense-amount" step="0.01" required>
+                            </div>
+                        </div>      
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="date_of_expense" class="formLegend">Data</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="date" name="date_of_expense" id="date-of-expense" required>
+                            </div>
+                        </div>                            
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="payment_method" class="formLegend"> Metoda płatności </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select class="custom-select mr-sm-2" name="payment_method" id="expense-payment-method" required>
+                                    <option selected value="0" disabled>Wybierz metodę płatności...</option>
+
+                                    {% for method in paymentMethods %}
+                                        <option value="{{ method.id }}">{{ method.name }}</option> 
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                        </div> 
+
+                        <div class="row mb-2">
+                            <div class="col-sm-3 text-left">
+                                <label for="comment" class="formLegend"> Komentarz (opcjonalnie) </label>
+                            </div>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="expense-comment" name="expense_comment" rows="2" cols="44" placeholder="Twój komentarz ..."></textarea>
+                            </div>
+                        </div>  
+
+                      </div>
+
+                      <div class="modal-footer">
+                          <div class="row col-sm-12">
+                              <div class="col-sm-6">
+                                <button type="submit" class="btn btn-success w-100 py-2">Zapisz zmiany</button>
+                              </div>
+                              <div class="col-sm-6">
+                                <buton class="btn btn-danger w-100 py-2" data-dismiss="modal">Anuluj</buton> 
+                              </div>
+                          </div>
+                      </div>
+                        
+                    </form> 
+                    
+                </div>
+
+              </div>
+            </div>       
+            
+            <!-- Delete Expense Modal -->
+            <div id="del-expense-modal" class="modal fade" role="dialog">
+              <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title text-center">Usunięcie wydatku</h4>
+                    <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-10 offset-sm-1">
+
+                            <p>Czy na pewno usunąć wydatek?</p>
+
+                        </div>
+
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-4 offset-1 px-1">
+                             <button id="del-expense-btn" class="btn btn-primary mt-2 w-100" data-dismiss="modal">Usuń</button>
+                        </div>
+                        <div class="col-sm-4 offset-2 px-1">
+                             <button class="btn btn-danger mt-2 cancel-btn w-100" data-dismiss="modal">Anuluj</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>            
+            
+        </div>          
 
     </div>    
 

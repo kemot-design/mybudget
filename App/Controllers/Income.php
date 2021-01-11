@@ -63,5 +63,32 @@ class Income extends Authenticated
         }
     }
 
+    public function editSingleIncomeAction() 
+    {
+        $editedIncome = new Incomes($_POST);
+        
+        if ($editedIncome->edit()) {
+            
+            //Flash::addMessage('Wydatek został zmieniony');
+            
+            $this->redirect('/Balance/show');
+            
+        } else {
+            Flash::addMessage('Niepoprawne dane, popraw formularz', Flash::WARNING);
+            
+            $this->redirect('/Balance/show');
+        }
+    }
+    
+    public function deleteSingleIncomeAction()
+    {
+        $userId = $this->user->id;
+        
+        if(Incomes::deleteIncome($_POST['incomeId'], $userId)) {
+            echo 'success';
+        } else {
+            echo 'Nie udało się usunąć przychodu';
+        }
+    }    
 
 }

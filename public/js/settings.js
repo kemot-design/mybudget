@@ -111,7 +111,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "http://localhost/settings/deleteExpenseCategory",
+            url: "/settings/deleteExpenseCategory",
             data: { ctgId: editingExpCtgId, userId: userId},
             success: function(response) {
                 if (response == "success") {
@@ -314,7 +314,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: "POST",
-            url: "http://localhost/settings/deleteIncomeCategory",
+            url: "/settings/deleteIncomeCategory",
             data: { ctgId: editingIncCtgId, userId: userId},
             success: function(response) {
                 if (response == "success") {
