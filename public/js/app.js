@@ -45,3 +45,7 @@ $.validator.addMethod('dateRange',
 
     'Please choose date from 2020:01:01 up to one month from today'
 );
+
+$('#flash-msg-hide-btn').click(function(){
+    $('.alert').remove();
+});

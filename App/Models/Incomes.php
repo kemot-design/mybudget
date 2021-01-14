@@ -433,4 +433,21 @@ class Incomes extends \Core\Model
         }
     }    
     
+    public static function areThereIncomesInTheCategory($categoryId)
+    {
+        $sql = 'SELECT amount FROM incomes
+                WHERE income_category_assigned_to_user_id = :categoryId';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':categoryId', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if($stmt->rowCount() == 0 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }    
+    
 }

@@ -144,60 +144,26 @@ $(document).ready(function(){
     
 //Delete income
     
-    var incomeToDelId = null;
-    
     $('.del-income').click(function(){
 
         $("#del-income-modal").modal('show');
         
-        incomeToDelId = $(this).data('incomeId');
+        var incomeToDelId = $(this).data('incomeId');
+        
+        $('#deleting-income-id').val(incomeToDelId);
 
     });
     
-    $('#del-income-btn').click(function(){
-        
-        $.ajax({
-            type: 'POST',
-            url: '/Income/deleteSingleIncome',
-            data: {incomeId: incomeToDelId},
-            success: function(response){
-                if(response = "success") {
-                    $('#income-' + incomeToDelId).remove();
-                } else {
-                    alert('response');
-                }
-            }
-        }); 
-        
-    });
-    
 //Delete expense
-    
-    var expenseToDelId = null;
     
     $('.del-expense').click(function(){
 
         $("#del-expense-modal").modal('show');
         
-        expenseToDelId = $(this).data('expenseId');
+        var expenseToDelId = $(this).data('expenseId');
+        
+        $('#deleting-expense-id').val(expenseToDelId);
 
-    });
-    
-    $('#del-expense-btn').click(function(){
-        
-        $.ajax({
-            type: 'POST',
-            url: '/Expense/deleteSingleExpense',
-            data: {expenseId: expenseToDelId},
-            success: function(response){
-                if(response = "success") {
-                    $('#expense-' + expenseToDelId).remove();
-                } else {
-                    alert('response');
-                }
-            }
-        }); 
-        
     });
     
 //graphs

@@ -50,8 +50,22 @@ $(document).ready(function() {
 
         editingExpCtgId = $(this).data('categoryId');
         var ctgName = $("#exp-ctg-name-id" + editingExpCtgId).html();
-        $("#exp-ctg-to-del").html(ctgName);
-
+        var message = "";
+        
+        $.ajax({
+            type: "POST",
+            url: "/settings/areThereExpensesInTheCategory",
+            data: { ctgId: editingExpCtgId},
+            success: function(response) {
+                if (response == "true") {
+                    message = "<span class='warning-message'>W kategori " + ctgName + " są już dodane wydatki.\n Usunięcie kategori spowoduje również usunięcie dodanych w niej wydatków.</span><br/><br/>";
+                } 
+                message = message + "Czy na pewno chcesz usunąć kategorię " + ctgName + "?";
+                
+                $("#expense-ctg-del-msg").html(message);
+            }
+        });         
+            
         $("#del-exp-ctg-modal").modal({
             show: true 
         }); 
@@ -303,12 +317,26 @@ $(document).ready(function() {
 
         editingIncCtgId = $(this).data('categoryId');
         var ctgName = $("#inc-ctg-name-id" + editingIncCtgId).html();
-        $("#inc-ctg-to-del").html(ctgName);
-
+        var message = "";
+        
+        $.ajax({
+            type: "POST",
+            url: "/settings/areThereIncomesInTheCategory",
+            data: { ctgId: editingIncCtgId},
+            success: function(response) {
+                if (response == "true") {
+                    message = "<span class='warning-message'>W kategori " + ctgName + " są już dodane przychody.\n Usunięcie kategori spowoduje również usunięcie dodanych w niej przychodów.</span><br/><br/>";
+                } 
+                message = message + "Czy na pewno chcesz usunąć kategorię " + ctgName + "?";
+                
+                $("#income-ctg-del-msg").html(message);
+            }
+        });         
+            
         $("#del-inc-ctg-modal").modal({
             show: true 
         }); 
-    })    
+    });     
     
     $("#confirm-inc-ctg-del-btn").click(function(){
 
@@ -406,18 +434,32 @@ $(document).ready(function() {
                 $("#pay-method-edit-error").text(data);
             }
         });
-    });     
+    });          
     
     $('.pay-method-delete-btn').on("click", function() {
 
         editingPayMethodId = $(this).data('methodId');
         var methodName = $("#pay-method-name-id" + editingPayMethodId).html();
-        $("#pay-method-to-del").text(methodName);
-
+        var message = "";
+        
+        $.ajax({
+            type: "POST",
+            url: "/settings/areThereExpensesWithThePayMethod",
+            data: { methodId: editingPayMethodId},
+            success: function(response) {
+                if (response == "true") {
+                    message = "<span class='warning-message'>Istnieją już wydatki z metodą płatności - '" + methodName + "'.\n Usunięcie jej spowoduje również usunięcie wydatków z tą metodą płatności.</span><br/><br/>";
+                } 
+                message = message + "Czy na pewno chcesz usunąć metodę płatności <strong>" + methodName + "</strong>?";
+                
+                $("#pay-method-ctg-del-msg").html(message);
+            }
+        });         
+            
         $("#del-pay-method-modal").modal({
             show: true 
         }); 
-    })       
+    });        
     
     $("#confirm-pay-method-del-btn").click(function(){
 

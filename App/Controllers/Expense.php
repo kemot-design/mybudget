@@ -119,9 +119,11 @@ class Expense extends Authenticated
         $userId = $this->user->id;
         
         if(Expenses::deleteSingleExpense($_POST['expenseId'], $userId)) {
-            echo 'success';
+            $this->redirect('/Balance/show');
         } else {
-            echo 'Nie udało się usunąć wydatku';
+            Flash::addMessage('Błąd serwera, przepraszamy', Flash::WARNING);
+            
+            $this->redirect('/Balance/show');
         }
     }
 

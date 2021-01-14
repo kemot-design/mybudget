@@ -227,6 +227,39 @@ class Settings extends \Core\Controller
         }
     }
     
+    public function areThereExpensesInTheCategoryAction()
+    {
+        $expenseCategorydId = $_POST['ctgId'];
+        
+        if(Expenses::areThereExpensesInTheCategory($expenseCategorydId)) {
+            echo "true";
+        } else {
+            echo "false";
+        }
+    }
+        
+    public function areThereIncomesInTheCategoryAction()
+    {
+        $incomeCategorydId = $_POST['ctgId'];
+        
+        if(Incomes::areThereIncomesInTheCategory($incomeCategorydId)) {
+            echo "true";
+        } else {
+            echo "false";
+        }
+    }        
+    
+    public function areThereExpensesWithThePayMethodAction()
+    {
+        $payMethodId = $_POST['methodId'];
+        
+        if(Expenses::areThereExpensesWithThePayMethod($payMethodId)) {
+            echo "true";
+        } else {
+            echo "false";
+        }
+    }
+    
 }
 
 

@@ -30,7 +30,7 @@
                         <div class="col-sm-12 col-md-4">
                             <form action="/balance/show" method="POST" id="balanceForm">
 
-                                <!-- Modal -->
+                                <!-- Balance date Modal -->
                                 <div id="balance_date_modal" class="modal fade" role="dialog">
                                   <div class="modal-dialog">
 
@@ -74,9 +74,9 @@
 
                                 <select	class="custom-select mt-4" name="balance_period" id="balance_period" >
                                     <option value="" selected disabled hidden>Wybierz okres bilansu</option>
-                                    <option value="1">Bierzący miesiąc</option>
+                                    <option value="1">Bieżący miesiąc</option>
                                     <option value="2">Poprzedni miesiąc</option>
-                                    <option value="3">Bierzący rok</option>
+                                    <option value="3">Bieżący rok</option>
                                     <option value="4">Niestandardowa data</option>
                                 </select>
 
@@ -213,7 +213,7 @@
                                     <td id="inc-date-{{ income.id }}">{{ income.date_of_income }}</td>    
                                     <td id="inc-comment-{{ income.id }}">{{ income.income_comment }}</td>
                                     <td id="edit-inc-id-{{ income.id }}" class="edit-income pic-hover" data-income-id="{{ income.id }}"><img src="/img/edit.png"/></td>
-                                    <td id="edit-inc-id-{{ income.id }}" class="del-income pic-hover" data-income-id="{{ income.id }}"><img src="/img/delete.png"/></td>
+                                    <td id="del-inc-id-{{ income.id }}" class="del-income pic-hover" data-income-id="{{ income.id }}"><img src="/img/delete.png"/></td>
                                 </tr> 
                               {% endfor %}    
                               
@@ -353,32 +353,39 @@
 
                 <!-- Modal content-->
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title text-center">Usunięcie przychodu</h4>
-                    <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
-                  </div>
-                  <div class="modal-body">
+                    
+                    <form action="/Income/deleteSingleIncome" method="POST" id="delete-income">
+                        
+                      <input type="hidden" id="deleting-income-id" name="incomeId">
+                        
+                      <div class="modal-header">
+                        <h4 class="modal-title text-center">Usunięcie przychodu</h4>
+                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                      </div>
+                      <div class="modal-body">
 
-                    <div class="row">
-                        <div class="col-sm-10 offset-sm-1">
+                        <div class="row">
+                            <div class="col-sm-10 offset-sm-1">
 
-                            <p>Czy na pewno usunąć przychód?</p>
+                                <p>Czy na pewno usunąć przychód?</p>
+
+                            </div>
 
                         </div>
+                      </div>
 
-                    </div>
-                  </div>
-
-                  <div class="modal-footer">
-                    <div class="row col-sm-12">
-                        <div class="col-sm-4 offset-1 px-1">
-                             <button id="del-income-btn" class="btn btn-primary mt-2 w-100" data-dismiss="modal">Usuń</button>
+                      <div class="modal-footer">
+                        <div class="row col-sm-12">
+                            <div class="col-sm-4 offset-1 px-1">
+                                 <button type="submit" class="btn btn-primary mt-2 w-100">Usuń</button>
+                            </div>
+                            <div class="col-sm-4 offset-2 px-1">
+                                 <button class="btn btn-danger mt-2 cancel-btn w-100" data-dismiss="modal">Anuluj</button>
+                            </div>
                         </div>
-                        <div class="col-sm-4 offset-2 px-1">
-                             <button class="btn btn-danger mt-2 cancel-btn w-100" data-dismiss="modal">Anuluj</button>
-                        </div>
-                    </div>
-                  </div>
+                      </div>
+                        
+                    </form>
                 </div>
 
               </div>
@@ -486,32 +493,40 @@
 
                 <!-- Modal content-->
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title text-center">Usunięcie wydatku</h4>
-                    <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
-                  </div>
-                  <div class="modal-body">
+                    
+                    <form action="/Expense/DeleteSingleExpense" method="POST" id="delete-expense">
+                        
+                      <input type="hidden" id="deleting-expense-id" name="expenseId">
 
-                    <div class="row">
-                        <div class="col-sm-10 offset-sm-1">
+                      <div class="modal-header">
+                        <h4 class="modal-title text-center">Usunięcie wydatku</h4>
+                        <button type="button" class="close text-right" data-dismiss="modal">&times;</button>                              
+                      </div>
+                      <div class="modal-body">
 
-                            <p>Czy na pewno usunąć wydatek?</p>
+                        <div class="row">
+                            <div class="col-sm-10 offset-sm-1">
+
+                                <p>Czy na pewno usunąć wydatek?</p>
+
+                            </div>
 
                         </div>
+                      </div>
 
-                    </div>
-                  </div>
-
-                  <div class="modal-footer">
-                    <div class="row col-sm-12">
-                        <div class="col-sm-4 offset-1 px-1">
-                             <button id="del-expense-btn" class="btn btn-primary mt-2 w-100" data-dismiss="modal">Usuń</button>
+                      <div class="modal-footer">
+                        <div class="row col-sm-12">
+                            <div class="col-sm-4 offset-1 px-1">
+                                 <button type="submit" class="btn btn-primary mt-2 w-100">Usuń</button>
+                            </div>
+                            <div class="col-sm-4 offset-2 px-1">
+                                 <button class="btn btn-danger mt-2 cancel-btn w-100" data-dismiss="modal">Anuluj</button>
+                            </div>
                         </div>
-                        <div class="col-sm-4 offset-2 px-1">
-                             <button class="btn btn-danger mt-2 cancel-btn w-100" data-dismiss="modal">Anuluj</button>
-                        </div>
-                    </div>
-                  </div>
+                      </div>
+                        
+                    </form>
+                    
                 </div>
 
               </div>

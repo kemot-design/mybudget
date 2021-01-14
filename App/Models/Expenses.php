@@ -43,7 +43,8 @@ class Expenses extends \Core\Model
     public static function getUserAssignedCategories($userId)
     {
         
-        $sql = 'SELECT id, name, monthly_limit FROM             expenses_category_assigned_to_users
+        $sql = 'SELECT id, name, monthly_limit 
+                FROM expenses_category_assigned_to_users
                 WHERE user_id = :id';
         
         $db = static::getDB();
@@ -657,6 +658,40 @@ class Expenses extends \Core\Model
             $stmt->bindValue(':expenseId', $expenseId, PDO::PARAM_INT);
             
             return $stmt->execute();        
+        }
+    }
+    
+    public static function areThereExpensesInTheCategory($categoryId)
+    {
+        $sql = 'SELECT amount FROM expenses
+                WHERE expense_category_assigned_to_user_id = :categoryId';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':categoryId', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if($stmt->rowCount() == 0 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }    
+    
+    public static function areThereExpensesWithThePayMethod($methodId)
+    {
+        $sql = 'SELECT amount FROM expenses
+                WHERE payment_method_assigned_to_user_id = :methodId';
+        
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':methodId', $methodId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if($stmt->rowCount() == 0 ) {
+            return false;
+        } else {
+            return true;
         }
     }
     

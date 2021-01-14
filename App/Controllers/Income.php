@@ -85,9 +85,11 @@ class Income extends Authenticated
         $userId = $this->user->id;
         
         if(Incomes::deleteIncome($_POST['incomeId'], $userId)) {
-            echo 'success';
+            $this->redirect('/Balance/show');
         } else {
-            echo 'Nie udało się usunąć przychodu';
+            Flash::addMessage('Błąd serwera, przepraszamy', Flash::WARNING);
+            
+            $this->redirect('/Balance/show');
         }
     }    
 

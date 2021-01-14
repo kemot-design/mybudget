@@ -259,7 +259,6 @@ hr{
 
 .error{
 	color: red;
-	margin-top: 0px;
 	margin-bottom: 5px;
     margin-top: 5px;
 }
@@ -274,6 +273,9 @@ img{
 .alert {
     border: 1px solid #ccc;
     padding: 6px;
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 20px;
 }
 .alert-info {
     background-color: #d9edf7;
@@ -397,4 +399,13 @@ img{
 
 .negative-balance {
     color: red;
+}
+
+.warning-message {
+    color: red;
+}
+
+#flash-msg-hide-btn {
+    float: right;
+    margin-right: 10px;
 }
